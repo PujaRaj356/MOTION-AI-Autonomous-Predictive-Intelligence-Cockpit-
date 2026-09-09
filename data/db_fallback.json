@@ -1,0 +1,1331 @@
+{
+  "machines": [
+    {
+      "machine_id": "M-101",
+      "name": "CNC Milling Machine 01",
+      "machine_type": "CNC Lathe (H)",
+      "status": "HEALTHY",
+      "health_score": 93,
+      "failure_probability": 0.0226,
+      "rul": 166,
+      "air_temperature": 24.5,
+      "process_temperature": 34.8,
+      "rpm": 1540.0,
+      "torque": 42.1,
+      "tool_wear": 45.0,
+      "last_updated": "2026-09-09T11:37:00.417598"
+    },
+    {
+      "machine_id": "M-102",
+      "name": "CNC Milling Machine 02",
+      "machine_type": "CNC Lathe (L)",
+      "status": "CRITICAL",
+      "health_score": 2,
+      "failure_probability": 0.9963,
+      "rul": 10,
+      "air_temperature": 23.5,
+      "process_temperature": 36.0,
+      "rpm": 2350.0,
+      "torque": 66.5,
+      "tool_wear": 215.0,
+      "last_updated": "2026-09-09T11:37:20.113279"
+    },
+    {
+      "machine_id": "M-103",
+      "name": "Heavy Duty Router",
+      "machine_type": "Router (M)",
+      "status": "WARNING",
+      "health_score": 61,
+      "failure_probability": 0.471,
+      "rul": 92,
+      "air_temperature": 28.4,
+      "process_temperature": 38.1,
+      "rpm": 1820,
+      "torque": 52.0,
+      "tool_wear": 142,
+      "last_updated": "2026-09-09T10:29:01.359227"
+    },
+    {
+      "machine_id": "M-104",
+      "name": "Precision Spindle 04",
+      "machine_type": "Spindle (H)",
+      "status": "HEALTHY",
+      "health_score": 88,
+      "failure_probability": 0.114,
+      "rul": 165,
+      "air_temperature": 23.8,
+      "process_temperature": 33.9,
+      "rpm": 1490,
+      "torque": 39.5,
+      "tool_wear": 60,
+      "last_updated": "2026-09-09T10:29:01.359232"
+    },
+    {
+      "machine_id": "M-105",
+      "name": "High Speed Drill 05",
+      "machine_type": "Drill (L)",
+      "status": "WARNING",
+      "health_score": 58,
+      "failure_probability": 0.512,
+      "rul": 84,
+      "air_temperature": 29.8,
+      "process_temperature": 40.2,
+      "rpm": 2100,
+      "torque": 58.6,
+      "tool_wear": 178,
+      "last_updated": "2026-09-09T10:29:01.359238"
+    }
+  ],
+  "predictions": [
+    {
+      "machine_id": "M-102",
+      "failure_probability": 0.9276,
+      "failure_percentage": 92.8,
+      "risk_level": "CRITICAL",
+      "health_score": 7,
+      "rul_estimate": 13,
+      "recommendation": "Immediate maintenance inspection recommended. High Torque and Rotational Speed and Air Temperature are contributing significantly to critical failure risk. Halt high-load cycles.",
+      "shap_explanation": [
+        {
+          "feature": "Torque",
+          "value": 52.0,
+          "shap_value": 2.225,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Rotational Speed",
+          "value": 1820.0,
+          "shap_value": 1.4257,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Tool Wear",
+          "value": 165.0,
+          "shap_value": -0.9031,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Process Temperature",
+          "value": 38.2,
+          "shap_value": -0.3573,
+          "impact": "medium",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Air Temperature",
+          "value": 28.5,
+          "shap_value": 0.1034,
+          "impact": "low",
+          "direction": "increases"
+        },
+        {
+          "feature": "Machine Type",
+          "value": 0.0,
+          "shap_value": 0.0562,
+          "impact": "low",
+          "direction": "increases"
+        }
+      ],
+      "ai_summary": "Torque and Rotational Speed are the primary factors increasing the predicted failure risk.",
+      "timestamp": "2026-09-09 11:27:56"
+    },
+    {
+      "machine_id": "M-102",
+      "failure_probability": 0.0755,
+      "failure_percentage": 7.6,
+      "risk_level": "HEALTHY",
+      "health_score": 83,
+      "rul_estimate": 130,
+      "recommendation": "Machine is operating within a healthy range. Continue baseline automated monitoring.",
+      "shap_explanation": [
+        {
+          "feature": "Tool Wear",
+          "value": 100.0,
+          "shap_value": -1.2066,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Torque",
+          "value": 40.0,
+          "shap_value": -1.1196,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Rotational Speed",
+          "value": 1500.0,
+          "shap_value": -0.6075,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Process Temperature",
+          "value": 36.0,
+          "shap_value": 0.2871,
+          "impact": "medium",
+          "direction": "increases"
+        },
+        {
+          "feature": "Air Temperature",
+          "value": 26.0,
+          "shap_value": 0.1155,
+          "impact": "low",
+          "direction": "increases"
+        },
+        {
+          "feature": "Machine Type",
+          "value": 0.0,
+          "shap_value": 0.0259,
+          "impact": "low",
+          "direction": "increases"
+        }
+      ],
+      "ai_summary": "Process Temperature and Air Temperature are the primary factors increasing the predicted failure risk.",
+      "timestamp": "2026-09-09 11:28:00"
+    },
+    {
+      "machine_id": "M-102",
+      "failure_probability": 0.9981,
+      "failure_percentage": 99.8,
+      "risk_level": "CRITICAL",
+      "health_score": 2,
+      "rul_estimate": 10,
+      "recommendation": "Immediate maintenance inspection recommended. High Torque and Rotational Speed and Air Temperature are contributing significantly to critical failure risk. Halt high-load cycles.",
+      "shap_explanation": [
+        {
+          "feature": "Torque",
+          "value": 65.0,
+          "shap_value": 4.6663,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Rotational Speed",
+          "value": 2300.0,
+          "shap_value": 1.7676,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Tool Wear",
+          "value": 210.0,
+          "shap_value": -0.3215,
+          "impact": "medium",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Air Temperature",
+          "value": 32.0,
+          "shap_value": 0.1813,
+          "impact": "medium",
+          "direction": "increases"
+        },
+        {
+          "feature": "Process Temperature",
+          "value": 44.0,
+          "shap_value": -0.1393,
+          "impact": "low",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Machine Type",
+          "value": 0.0,
+          "shap_value": 0.1113,
+          "impact": "low",
+          "direction": "increases"
+        }
+      ],
+      "ai_summary": "Torque and Rotational Speed are the primary factors increasing the predicted failure risk.",
+      "timestamp": "2026-09-09 11:28:00"
+    },
+    {
+      "machine_id": "M-102",
+      "failure_probability": 0.9276,
+      "failure_percentage": 92.8,
+      "risk_level": "CRITICAL",
+      "health_score": 7,
+      "rul_estimate": 13,
+      "recommendation": "Immediate maintenance inspection recommended. High Torque and Rotational Speed and Air Temperature are contributing significantly to critical failure risk. Halt high-load cycles.",
+      "shap_explanation": [
+        {
+          "feature": "Torque",
+          "value": 52.0,
+          "shap_value": 2.225,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Rotational Speed",
+          "value": 1820.0,
+          "shap_value": 1.4257,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Tool Wear",
+          "value": 165.0,
+          "shap_value": -0.9031,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Process Temperature",
+          "value": 38.2,
+          "shap_value": -0.3573,
+          "impact": "medium",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Air Temperature",
+          "value": 28.5,
+          "shap_value": 0.1034,
+          "impact": "low",
+          "direction": "increases"
+        },
+        {
+          "feature": "Machine Type",
+          "value": 0.0,
+          "shap_value": 0.0562,
+          "impact": "low",
+          "direction": "increases"
+        }
+      ],
+      "ai_summary": "Torque and Rotational Speed are the primary factors increasing the predicted failure risk.",
+      "timestamp": "2026-09-09 11:28:19"
+    },
+    {
+      "machine_id": "M-102",
+      "failure_probability": 0.0755,
+      "failure_percentage": 7.6,
+      "risk_level": "HEALTHY",
+      "health_score": 83,
+      "rul_estimate": 130,
+      "recommendation": "Machine is operating within a healthy range. Continue baseline automated monitoring.",
+      "shap_explanation": [
+        {
+          "feature": "Tool Wear",
+          "value": 100.0,
+          "shap_value": -1.2066,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Torque",
+          "value": 40.0,
+          "shap_value": -1.1196,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Rotational Speed",
+          "value": 1500.0,
+          "shap_value": -0.6075,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Process Temperature",
+          "value": 36.0,
+          "shap_value": 0.2871,
+          "impact": "medium",
+          "direction": "increases"
+        },
+        {
+          "feature": "Air Temperature",
+          "value": 26.0,
+          "shap_value": 0.1155,
+          "impact": "low",
+          "direction": "increases"
+        },
+        {
+          "feature": "Machine Type",
+          "value": 0.0,
+          "shap_value": 0.0259,
+          "impact": "low",
+          "direction": "increases"
+        }
+      ],
+      "ai_summary": "Process Temperature and Air Temperature are the primary factors increasing the predicted failure risk.",
+      "timestamp": "2026-09-09 11:28:23"
+    },
+    {
+      "machine_id": "M-102",
+      "failure_probability": 0.9981,
+      "failure_percentage": 99.8,
+      "risk_level": "CRITICAL",
+      "health_score": 2,
+      "rul_estimate": 10,
+      "recommendation": "Immediate maintenance inspection recommended. High Torque and Rotational Speed and Air Temperature are contributing significantly to critical failure risk. Halt high-load cycles.",
+      "shap_explanation": [
+        {
+          "feature": "Torque",
+          "value": 65.0,
+          "shap_value": 4.6663,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Rotational Speed",
+          "value": 2300.0,
+          "shap_value": 1.7676,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Tool Wear",
+          "value": 210.0,
+          "shap_value": -0.3215,
+          "impact": "medium",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Air Temperature",
+          "value": 32.0,
+          "shap_value": 0.1813,
+          "impact": "medium",
+          "direction": "increases"
+        },
+        {
+          "feature": "Process Temperature",
+          "value": 44.0,
+          "shap_value": -0.1393,
+          "impact": "low",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Machine Type",
+          "value": 0.0,
+          "shap_value": 0.1113,
+          "impact": "low",
+          "direction": "increases"
+        }
+      ],
+      "ai_summary": "Torque and Rotational Speed are the primary factors increasing the predicted failure risk.",
+      "timestamp": "2026-09-09 11:28:23"
+    },
+    {
+      "machine_id": "M-101",
+      "failure_probability": 0.0226,
+      "failure_percentage": 2.3,
+      "risk_level": "HEALTHY",
+      "health_score": 93,
+      "rul_estimate": 166,
+      "recommendation": "Machine is operating within a healthy range. Continue baseline automated monitoring.",
+      "shap_explanation": [
+        {
+          "feature": "Tool Wear",
+          "value": 45.0,
+          "shap_value": -1.3744,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Torque",
+          "value": 42.1,
+          "shap_value": -1.3319,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Rotational Speed",
+          "value": 1540.0,
+          "shap_value": -0.7379,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Air Temperature",
+          "value": 24.5,
+          "shap_value": -0.5398,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Process Temperature",
+          "value": 34.8,
+          "shap_value": 0.4588,
+          "impact": "medium",
+          "direction": "increases"
+        },
+        {
+          "feature": "Machine Type",
+          "value": 2.0,
+          "shap_value": -0.241,
+          "impact": "medium",
+          "direction": "decreases"
+        }
+      ],
+      "ai_summary": "Process Temperature are the primary factors increasing the predicted failure risk.",
+      "timestamp": "2026-09-09 11:37:00"
+    },
+    {
+      "machine_id": "M-102",
+      "failure_probability": 0.9943,
+      "failure_percentage": 99.4,
+      "risk_level": "CRITICAL",
+      "health_score": 2,
+      "rul_estimate": 10,
+      "recommendation": "Immediate maintenance inspection recommended. High Torque and Process Temperature and Rotational Speed are contributing significantly to critical failure risk. Halt high-load cycles.",
+      "shap_explanation": [
+        {
+          "feature": "Torque",
+          "value": 54.5,
+          "shap_value": 2.4934,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Process Temperature",
+          "value": 31.5,
+          "shap_value": 1.6933,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Rotational Speed",
+          "value": 2060.0,
+          "shap_value": 0.8399,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Air Temperature",
+          "value": 31.0,
+          "shap_value": 0.7753,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Tool Wear",
+          "value": 120.0,
+          "shap_value": -0.6778,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Machine Type",
+          "value": 0.0,
+          "shap_value": 0.0448,
+          "impact": "low",
+          "direction": "increases"
+        }
+      ],
+      "ai_summary": "Torque and Process Temperature are the primary factors increasing the predicted failure risk.",
+      "timestamp": "2026-09-09 11:37:11"
+    },
+    {
+      "machine_id": "M-102",
+      "failure_probability": 0.9981,
+      "failure_percentage": 99.8,
+      "risk_level": "CRITICAL",
+      "health_score": 2,
+      "rul_estimate": 10,
+      "recommendation": "Immediate maintenance inspection recommended. High Torque and Rotational Speed and Tool Wear are contributing significantly to critical failure risk. Halt high-load cycles.",
+      "shap_explanation": [
+        {
+          "feature": "Torque",
+          "value": 66.5,
+          "shap_value": 3.6887,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Rotational Speed",
+          "value": 2350.0,
+          "shap_value": 1.5153,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Tool Wear",
+          "value": 215.0,
+          "shap_value": 0.6176,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Machine Type",
+          "value": 0.0,
+          "shap_value": 0.2984,
+          "impact": "medium",
+          "direction": "increases"
+        },
+        {
+          "feature": "Air Temperature",
+          "value": 33.5,
+          "shap_value": 0.159,
+          "impact": "medium",
+          "direction": "increases"
+        },
+        {
+          "feature": "Process Temperature",
+          "value": 46.0,
+          "shap_value": -0.0361,
+          "impact": "low",
+          "direction": "decreases"
+        }
+      ],
+      "ai_summary": "Torque and Rotational Speed are the primary factors increasing the predicted failure risk.",
+      "timestamp": "2026-09-09 11:37:11"
+    },
+    {
+      "machine_id": "M-102",
+      "failure_probability": 0.9943,
+      "failure_percentage": 99.4,
+      "risk_level": "CRITICAL",
+      "health_score": 2,
+      "rul_estimate": 10,
+      "recommendation": "Immediate maintenance inspection recommended. High Torque and Process Temperature and Rotational Speed are contributing significantly to critical failure risk. Halt high-load cycles.",
+      "shap_explanation": [
+        {
+          "feature": "Torque",
+          "value": 54.5,
+          "shap_value": 2.4934,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Process Temperature",
+          "value": 31.5,
+          "shap_value": 1.6933,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Rotational Speed",
+          "value": 2060.0,
+          "shap_value": 0.8399,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Air Temperature",
+          "value": 31.0,
+          "shap_value": 0.7753,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Tool Wear",
+          "value": 120.0,
+          "shap_value": -0.6778,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Machine Type",
+          "value": 0.0,
+          "shap_value": 0.0448,
+          "impact": "low",
+          "direction": "increases"
+        }
+      ],
+      "ai_summary": "Torque and Process Temperature are the primary factors increasing the predicted failure risk.",
+      "timestamp": "2026-09-09 11:37:19"
+    },
+    {
+      "machine_id": "M-102",
+      "failure_probability": 0.9963,
+      "failure_percentage": 99.6,
+      "risk_level": "CRITICAL",
+      "health_score": 2,
+      "rul_estimate": 10,
+      "recommendation": "Immediate maintenance inspection recommended. High Torque and Rotational Speed and Tool Wear are contributing significantly to critical failure risk. Halt high-load cycles.",
+      "shap_explanation": [
+        {
+          "feature": "Torque",
+          "value": 66.5,
+          "shap_value": 4.0565,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Rotational Speed",
+          "value": 2350.0,
+          "shap_value": 1.3528,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Air Temperature",
+          "value": 23.5,
+          "shap_value": -0.5177,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Tool Wear",
+          "value": 215.0,
+          "shap_value": 0.3906,
+          "impact": "medium",
+          "direction": "increases"
+        },
+        {
+          "feature": "Machine Type",
+          "value": 0.0,
+          "shap_value": 0.2596,
+          "impact": "medium",
+          "direction": "increases"
+        },
+        {
+          "feature": "Process Temperature",
+          "value": 36.0,
+          "shap_value": 0.0495,
+          "impact": "low",
+          "direction": "increases"
+        }
+      ],
+      "ai_summary": "Torque and Rotational Speed are the primary factors increasing the predicted failure risk.",
+      "timestamp": "2026-09-09 11:37:20"
+    }
+  ],
+  "scenarios": [
+    {
+      "machine_id": "M-102",
+      "original_prediction": {
+        "machine_id": "M-102",
+        "failure_probability": 0.0755,
+        "failure_percentage": 7.6,
+        "risk_level": "HEALTHY",
+        "health_score": 83,
+        "rul_estimate": 130,
+        "recommendation": "Machine is operating within a healthy range. Continue baseline automated monitoring.",
+        "shap_explanation": [
+          {
+            "feature": "Tool Wear",
+            "value": 100.0,
+            "shap_value": -1.2066,
+            "impact": "high",
+            "direction": "decreases"
+          },
+          {
+            "feature": "Torque",
+            "value": 40.0,
+            "shap_value": -1.1196,
+            "impact": "high",
+            "direction": "decreases"
+          },
+          {
+            "feature": "Rotational Speed",
+            "value": 1500.0,
+            "shap_value": -0.6075,
+            "impact": "high",
+            "direction": "decreases"
+          },
+          {
+            "feature": "Process Temperature",
+            "value": 36.0,
+            "shap_value": 0.2871,
+            "impact": "medium",
+            "direction": "increases"
+          },
+          {
+            "feature": "Air Temperature",
+            "value": 26.0,
+            "shap_value": 0.1155,
+            "impact": "low",
+            "direction": "increases"
+          },
+          {
+            "feature": "Machine Type",
+            "value": 0.0,
+            "shap_value": 0.0259,
+            "impact": "low",
+            "direction": "increases"
+          }
+        ],
+        "ai_summary": "Process Temperature and Air Temperature are the primary factors increasing the predicted failure risk.",
+        "timestamp": "2026-09-09 11:28:00"
+      },
+      "simulated_prediction": {
+        "machine_id": "M-102",
+        "failure_probability": 0.9981,
+        "failure_percentage": 99.8,
+        "risk_level": "CRITICAL",
+        "health_score": 2,
+        "rul_estimate": 10,
+        "recommendation": "Immediate maintenance inspection recommended. High Torque and Rotational Speed and Air Temperature are contributing significantly to critical failure risk. Halt high-load cycles.",
+        "shap_explanation": [
+          {
+            "feature": "Torque",
+            "value": 65.0,
+            "shap_value": 4.6663,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Rotational Speed",
+            "value": 2300.0,
+            "shap_value": 1.7676,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Tool Wear",
+            "value": 210.0,
+            "shap_value": -0.3215,
+            "impact": "medium",
+            "direction": "decreases"
+          },
+          {
+            "feature": "Air Temperature",
+            "value": 32.0,
+            "shap_value": 0.1813,
+            "impact": "medium",
+            "direction": "increases"
+          },
+          {
+            "feature": "Process Temperature",
+            "value": 44.0,
+            "shap_value": -0.1393,
+            "impact": "low",
+            "direction": "decreases"
+          },
+          {
+            "feature": "Machine Type",
+            "value": 0.0,
+            "shap_value": 0.1113,
+            "impact": "low",
+            "direction": "increases"
+          }
+        ],
+        "ai_summary": "Torque and Rotational Speed are the primary factors increasing the predicted failure risk.",
+        "timestamp": "2026-09-09 11:28:00"
+      },
+      "delta_risk_pp": 92.2,
+      "delta_health": -81,
+      "delta_rul": -120,
+      "explanation": "The simulated operating parameters increase failure risk by 92.2 percentage points due to elevated load and stress conditions.",
+      "parameter_changes": [
+        {
+          "parameter": "Air Temperature",
+          "original": 26.0,
+          "simulated": 32.0,
+          "delta": 6.0,
+          "unit": "\u00b0C"
+        },
+        {
+          "parameter": "Process Temperature",
+          "original": 36.0,
+          "simulated": 44.0,
+          "delta": 8.0,
+          "unit": "\u00b0C"
+        },
+        {
+          "parameter": "Rotational Speed",
+          "original": 1500.0,
+          "simulated": 2300.0,
+          "delta": 800.0,
+          "unit": "RPM"
+        },
+        {
+          "parameter": "Torque",
+          "original": 40.0,
+          "simulated": 65.0,
+          "delta": 25.0,
+          "unit": "Nm"
+        },
+        {
+          "parameter": "Tool Wear",
+          "original": 100.0,
+          "simulated": 210.0,
+          "delta": 110.0,
+          "unit": "min"
+        }
+      ],
+      "timestamp": "2026-09-09 11:28:00"
+    },
+    {
+      "machine_id": "M-102",
+      "original_prediction": {
+        "machine_id": "M-102",
+        "failure_probability": 0.0755,
+        "failure_percentage": 7.6,
+        "risk_level": "HEALTHY",
+        "health_score": 83,
+        "rul_estimate": 130,
+        "recommendation": "Machine is operating within a healthy range. Continue baseline automated monitoring.",
+        "shap_explanation": [
+          {
+            "feature": "Tool Wear",
+            "value": 100.0,
+            "shap_value": -1.2066,
+            "impact": "high",
+            "direction": "decreases"
+          },
+          {
+            "feature": "Torque",
+            "value": 40.0,
+            "shap_value": -1.1196,
+            "impact": "high",
+            "direction": "decreases"
+          },
+          {
+            "feature": "Rotational Speed",
+            "value": 1500.0,
+            "shap_value": -0.6075,
+            "impact": "high",
+            "direction": "decreases"
+          },
+          {
+            "feature": "Process Temperature",
+            "value": 36.0,
+            "shap_value": 0.2871,
+            "impact": "medium",
+            "direction": "increases"
+          },
+          {
+            "feature": "Air Temperature",
+            "value": 26.0,
+            "shap_value": 0.1155,
+            "impact": "low",
+            "direction": "increases"
+          },
+          {
+            "feature": "Machine Type",
+            "value": 0.0,
+            "shap_value": 0.0259,
+            "impact": "low",
+            "direction": "increases"
+          }
+        ],
+        "ai_summary": "Process Temperature and Air Temperature are the primary factors increasing the predicted failure risk.",
+        "timestamp": "2026-09-09 11:28:23"
+      },
+      "simulated_prediction": {
+        "machine_id": "M-102",
+        "failure_probability": 0.9981,
+        "failure_percentage": 99.8,
+        "risk_level": "CRITICAL",
+        "health_score": 2,
+        "rul_estimate": 10,
+        "recommendation": "Immediate maintenance inspection recommended. High Torque and Rotational Speed and Air Temperature are contributing significantly to critical failure risk. Halt high-load cycles.",
+        "shap_explanation": [
+          {
+            "feature": "Torque",
+            "value": 65.0,
+            "shap_value": 4.6663,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Rotational Speed",
+            "value": 2300.0,
+            "shap_value": 1.7676,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Tool Wear",
+            "value": 210.0,
+            "shap_value": -0.3215,
+            "impact": "medium",
+            "direction": "decreases"
+          },
+          {
+            "feature": "Air Temperature",
+            "value": 32.0,
+            "shap_value": 0.1813,
+            "impact": "medium",
+            "direction": "increases"
+          },
+          {
+            "feature": "Process Temperature",
+            "value": 44.0,
+            "shap_value": -0.1393,
+            "impact": "low",
+            "direction": "decreases"
+          },
+          {
+            "feature": "Machine Type",
+            "value": 0.0,
+            "shap_value": 0.1113,
+            "impact": "low",
+            "direction": "increases"
+          }
+        ],
+        "ai_summary": "Torque and Rotational Speed are the primary factors increasing the predicted failure risk.",
+        "timestamp": "2026-09-09 11:28:23"
+      },
+      "delta_risk_pp": 92.2,
+      "delta_health": -81,
+      "delta_rul": -120,
+      "explanation": "The simulated operating parameters increase failure risk by 92.2 percentage points due to elevated load and stress conditions.",
+      "parameter_changes": [
+        {
+          "parameter": "Air Temperature",
+          "original": 26.0,
+          "simulated": 32.0,
+          "delta": 6.0,
+          "unit": "\u00b0C"
+        },
+        {
+          "parameter": "Process Temperature",
+          "original": 36.0,
+          "simulated": 44.0,
+          "delta": 8.0,
+          "unit": "\u00b0C"
+        },
+        {
+          "parameter": "Rotational Speed",
+          "original": 1500.0,
+          "simulated": 2300.0,
+          "delta": 800.0,
+          "unit": "RPM"
+        },
+        {
+          "parameter": "Torque",
+          "original": 40.0,
+          "simulated": 65.0,
+          "delta": 25.0,
+          "unit": "Nm"
+        },
+        {
+          "parameter": "Tool Wear",
+          "original": 100.0,
+          "simulated": 210.0,
+          "delta": 110.0,
+          "unit": "min"
+        }
+      ],
+      "timestamp": "2026-09-09 11:28:23"
+    },
+    {
+      "machine_id": "M-102",
+      "original_prediction": {
+        "machine_id": "M-102",
+        "failure_probability": 0.9943,
+        "failure_percentage": 99.4,
+        "risk_level": "CRITICAL",
+        "health_score": 2,
+        "rul_estimate": 10,
+        "recommendation": "Immediate maintenance inspection recommended. High Torque and Process Temperature and Rotational Speed are contributing significantly to critical failure risk. Halt high-load cycles.",
+        "shap_explanation": [
+          {
+            "feature": "Torque",
+            "value": 54.5,
+            "shap_value": 2.4934,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Process Temperature",
+            "value": 31.5,
+            "shap_value": 1.6933,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Rotational Speed",
+            "value": 2060.0,
+            "shap_value": 0.8399,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Air Temperature",
+            "value": 31.0,
+            "shap_value": 0.7753,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Tool Wear",
+            "value": 120.0,
+            "shap_value": -0.6778,
+            "impact": "high",
+            "direction": "decreases"
+          },
+          {
+            "feature": "Machine Type",
+            "value": 0.0,
+            "shap_value": 0.0448,
+            "impact": "low",
+            "direction": "increases"
+          }
+        ],
+        "ai_summary": "Torque and Process Temperature are the primary factors increasing the predicted failure risk.",
+        "timestamp": "2026-09-09 11:37:11"
+      },
+      "simulated_prediction": {
+        "machine_id": "M-102",
+        "failure_probability": 0.9981,
+        "failure_percentage": 99.8,
+        "risk_level": "CRITICAL",
+        "health_score": 2,
+        "rul_estimate": 10,
+        "recommendation": "Immediate maintenance inspection recommended. High Torque and Rotational Speed and Tool Wear are contributing significantly to critical failure risk. Halt high-load cycles.",
+        "shap_explanation": [
+          {
+            "feature": "Torque",
+            "value": 66.5,
+            "shap_value": 3.6887,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Rotational Speed",
+            "value": 2350.0,
+            "shap_value": 1.5153,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Tool Wear",
+            "value": 215.0,
+            "shap_value": 0.6176,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Machine Type",
+            "value": 0.0,
+            "shap_value": 0.2984,
+            "impact": "medium",
+            "direction": "increases"
+          },
+          {
+            "feature": "Air Temperature",
+            "value": 33.5,
+            "shap_value": 0.159,
+            "impact": "medium",
+            "direction": "increases"
+          },
+          {
+            "feature": "Process Temperature",
+            "value": 46.0,
+            "shap_value": -0.0361,
+            "impact": "low",
+            "direction": "decreases"
+          }
+        ],
+        "ai_summary": "Torque and Rotational Speed are the primary factors increasing the predicted failure risk.",
+        "timestamp": "2026-09-09 11:37:11"
+      },
+      "delta_risk_pp": 0.4,
+      "delta_health": 0,
+      "delta_rul": 0,
+      "explanation": "The simulated operating parameters increase failure risk by 0.4 percentage points due to elevated load and stress conditions.",
+      "parameter_changes": [
+        {
+          "parameter": "Air Temperature",
+          "original": 31.0,
+          "simulated": 33.5,
+          "delta": 2.5,
+          "unit": "\u00b0C"
+        },
+        {
+          "parameter": "Process Temperature",
+          "original": 31.5,
+          "simulated": 46.0,
+          "delta": 14.5,
+          "unit": "\u00b0C"
+        },
+        {
+          "parameter": "Rotational Speed",
+          "original": 2060.0,
+          "simulated": 2350.0,
+          "delta": 290.0,
+          "unit": "RPM"
+        },
+        {
+          "parameter": "Torque",
+          "original": 54.5,
+          "simulated": 66.5,
+          "delta": 12.0,
+          "unit": "Nm"
+        },
+        {
+          "parameter": "Tool Wear",
+          "original": 120.0,
+          "simulated": 215.0,
+          "delta": 95.0,
+          "unit": "min"
+        }
+      ],
+      "timestamp": "2026-09-09 11:37:11"
+    },
+    {
+      "machine_id": "M-102",
+      "original_prediction": {
+        "machine_id": "M-102",
+        "failure_probability": 0.9943,
+        "failure_percentage": 99.4,
+        "risk_level": "CRITICAL",
+        "health_score": 2,
+        "rul_estimate": 10,
+        "recommendation": "Immediate maintenance inspection recommended. High Torque and Process Temperature and Rotational Speed are contributing significantly to critical failure risk. Halt high-load cycles.",
+        "shap_explanation": [
+          {
+            "feature": "Torque",
+            "value": 54.5,
+            "shap_value": 2.4934,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Process Temperature",
+            "value": 31.5,
+            "shap_value": 1.6933,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Rotational Speed",
+            "value": 2060.0,
+            "shap_value": 0.8399,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Air Temperature",
+            "value": 31.0,
+            "shap_value": 0.7753,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Tool Wear",
+            "value": 120.0,
+            "shap_value": -0.6778,
+            "impact": "high",
+            "direction": "decreases"
+          },
+          {
+            "feature": "Machine Type",
+            "value": 0.0,
+            "shap_value": 0.0448,
+            "impact": "low",
+            "direction": "increases"
+          }
+        ],
+        "ai_summary": "Torque and Process Temperature are the primary factors increasing the predicted failure risk.",
+        "timestamp": "2026-09-09 11:37:19"
+      },
+      "simulated_prediction": {
+        "machine_id": "M-102",
+        "failure_probability": 0.9963,
+        "failure_percentage": 99.6,
+        "risk_level": "CRITICAL",
+        "health_score": 2,
+        "rul_estimate": 10,
+        "recommendation": "Immediate maintenance inspection recommended. High Torque and Rotational Speed and Tool Wear are contributing significantly to critical failure risk. Halt high-load cycles.",
+        "shap_explanation": [
+          {
+            "feature": "Torque",
+            "value": 66.5,
+            "shap_value": 4.0565,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Rotational Speed",
+            "value": 2350.0,
+            "shap_value": 1.3528,
+            "impact": "high",
+            "direction": "increases"
+          },
+          {
+            "feature": "Air Temperature",
+            "value": 23.5,
+            "shap_value": -0.5177,
+            "impact": "high",
+            "direction": "decreases"
+          },
+          {
+            "feature": "Tool Wear",
+            "value": 215.0,
+            "shap_value": 0.3906,
+            "impact": "medium",
+            "direction": "increases"
+          },
+          {
+            "feature": "Machine Type",
+            "value": 0.0,
+            "shap_value": 0.2596,
+            "impact": "medium",
+            "direction": "increases"
+          },
+          {
+            "feature": "Process Temperature",
+            "value": 36.0,
+            "shap_value": 0.0495,
+            "impact": "low",
+            "direction": "increases"
+          }
+        ],
+        "ai_summary": "Torque and Rotational Speed are the primary factors increasing the predicted failure risk.",
+        "timestamp": "2026-09-09 11:37:20"
+      },
+      "delta_risk_pp": 0.2,
+      "delta_health": 0,
+      "delta_rul": 0,
+      "explanation": "The simulated operating parameters increase failure risk by 0.2 percentage points due to elevated load and stress conditions.",
+      "parameter_changes": [
+        {
+          "parameter": "Air Temperature",
+          "original": 31.0,
+          "simulated": 23.5,
+          "delta": -7.5,
+          "unit": "\u00b0C"
+        },
+        {
+          "parameter": "Process Temperature",
+          "original": 31.5,
+          "simulated": 36.0,
+          "delta": 4.5,
+          "unit": "\u00b0C"
+        },
+        {
+          "parameter": "Rotational Speed",
+          "original": 2060.0,
+          "simulated": 2350.0,
+          "delta": 290.0,
+          "unit": "RPM"
+        },
+        {
+          "parameter": "Torque",
+          "original": 54.5,
+          "simulated": 66.5,
+          "delta": 12.0,
+          "unit": "Nm"
+        },
+        {
+          "parameter": "Tool Wear",
+          "original": 120.0,
+          "simulated": 215.0,
+          "delta": 95.0,
+          "unit": "min"
+        }
+      ],
+      "timestamp": "2026-09-09 11:37:20"
+    }
+  ],
+  "sensor_readings": [],
+  "maintenance_records": [
+    {
+      "id": "WO-901",
+      "machine_id": "M-102",
+      "title": "Critical Spindle Thermal Overhaul",
+      "issue": "High process temperature (42.5\u00b0C) and excessive tool wear (215 min)",
+      "recommended_action": "Replace tungsten carbide cutting tip and flush heat exchanger fluid.",
+      "priority": "HIGH",
+      "status": "OPEN",
+      "created_at": "2026-09-09T10:29:01.359246"
+    },
+    {
+      "id": "WO-902",
+      "machine_id": "M-103",
+      "title": "Preventive Rotor Inspection",
+      "issue": "Vibration and elevated torque (52.0 Nm)",
+      "recommended_action": "Inspect drive belt tension and re-grease rotor bearings.",
+      "priority": "MEDIUM",
+      "status": "OPEN",
+      "created_at": "2026-09-09T10:29:01.359253"
+    }
+  ]
+}
