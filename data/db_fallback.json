@@ -1596,6 +1596,32 @@
         "risk_level": "HEALTHY"
       },
       "timestamp": "2026-09-16 11:35:42"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "GOOD",
+      "confidence": 81,
+      "detected_issues": [
+        "Possible tip degradation"
+      ],
+      "recommendation": "Cutting tool appears within acceptable visual condition. Continue normal monitoring.",
+      "image_metrics": {
+        "edge_density": 0.0763,
+        "dark_ratio": 0.3416,
+        "brightness": 0.4884,
+        "contrast": 0.4737
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 93,
+        "sensor_failure_pct": 2.3,
+        "visual_penalty": 0,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-09-16 12:22:30"
     }
   ]
 }
