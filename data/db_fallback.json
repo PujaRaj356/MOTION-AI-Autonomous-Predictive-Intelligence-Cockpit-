@@ -20,15 +20,15 @@
       "name": "CNC Milling Machine 02",
       "machine_type": "CNC Lathe (L)",
       "status": "CRITICAL",
-      "health_score": 2,
-      "failure_probability": 0.9963,
-      "rul": 10,
-      "air_temperature": 23.5,
-      "process_temperature": 36.0,
-      "rpm": 2350.0,
-      "torque": 66.5,
-      "tool_wear": 215.0,
-      "last_updated": "2026-09-09T11:37:20.113279"
+      "health_score": 7,
+      "failure_probability": 0.9276,
+      "rul": 13,
+      "air_temperature": 28.5,
+      "process_temperature": 38.2,
+      "rpm": 1820.0,
+      "torque": 52.0,
+      "tool_wear": 165.0,
+      "last_updated": "2026-09-16T09:52:18.215954"
     },
     {
       "machine_id": "M-103",
@@ -681,6 +681,61 @@
       ],
       "ai_summary": "Torque and Rotational Speed are the primary factors increasing the predicted failure risk.",
       "timestamp": "2026-09-09 11:37:20"
+    },
+    {
+      "machine_id": "M-102",
+      "failure_probability": 0.9276,
+      "failure_percentage": 92.8,
+      "risk_level": "CRITICAL",
+      "health_score": 7,
+      "rul_estimate": 13,
+      "recommendation": "Immediate maintenance inspection recommended. High Torque and Rotational Speed and Air Temperature are contributing significantly to critical failure risk. Halt high-load cycles.",
+      "shap_explanation": [
+        {
+          "feature": "Torque",
+          "value": 52.0,
+          "shap_value": 2.225,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Rotational Speed",
+          "value": 1820.0,
+          "shap_value": 1.4257,
+          "impact": "high",
+          "direction": "increases"
+        },
+        {
+          "feature": "Tool Wear",
+          "value": 165.0,
+          "shap_value": -0.9031,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Process Temperature",
+          "value": 38.2,
+          "shap_value": -0.3573,
+          "impact": "medium",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Air Temperature",
+          "value": 28.5,
+          "shap_value": 0.1034,
+          "impact": "low",
+          "direction": "increases"
+        },
+        {
+          "feature": "Machine Type",
+          "value": 0.0,
+          "shap_value": 0.0562,
+          "impact": "low",
+          "direction": "increases"
+        }
+      ],
+      "ai_summary": "Torque and Rotational Speed are the primary factors increasing the predicted failure risk.",
+      "timestamp": "2026-09-16 09:52:18"
     }
   ],
   "scenarios": [
@@ -1326,6 +1381,34 @@
       "priority": "MEDIUM",
       "status": "OPEN",
       "created_at": "2026-09-09T10:29:01.359253"
+    }
+  ],
+  "visual_inspections": [
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "WARNING",
+      "confidence": 82,
+      "detected_issues": [
+        "Tip degradation \u2014 dark worn regions detected"
+      ],
+      "recommendation": "Schedule tool inspection. Moderate wear indicators detected \u2014 monitor closely.",
+      "image_metrics": {
+        "edge_density": 0.0156,
+        "dark_ratio": 1.0,
+        "brightness": 0.298,
+        "contrast": 0.0
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 78,
+        "sensor_failure_pct": 2.3,
+        "visual_penalty": 15,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-09-16 10:00:01"
     }
   ]
 }

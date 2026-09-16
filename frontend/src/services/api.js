@@ -16,5 +16,7 @@ export const getScenarios = () => API.get('/scenarios');
 export const getMaintenance = () => API.get('/maintenance');
 export const getMetrics = () => API.get('/metrics');
 export const getHealth = () => API.get('/health');
+export const runVisualInspection = (data) => API.post('/inspect/visual', data);
+export const explainPrediction = (data) => API.post('/explain', data);
 
 export default API;

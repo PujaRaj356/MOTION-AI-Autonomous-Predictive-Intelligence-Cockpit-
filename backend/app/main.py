@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.app.routes import predict, machines, history, metrics
+from backend.app.routes import predict, machines, history, metrics, visual
 from backend.app.database.connection import db_manager
 
 app = FastAPI(
@@ -33,6 +33,8 @@ app.include_router(history.router)
 app.include_router(history.router, prefix="/api")
 app.include_router(metrics.router)
 app.include_router(metrics.router, prefix="/api")
+app.include_router(visual.router)
+app.include_router(visual.router, prefix="/api")
 
 @app.get("/health", tags=["System Health"])
 @app.get("/api/health", tags=["System Health"])
@@ -42,7 +44,7 @@ def system_health():
         "ai_engine": "ONLINE",
         "mongodb_connected": db_manager.is_connected,
         "database_mode": "MongoDB Native" if db_manager.is_connected else "FileStore Fallback (Local JSON)",
-        "models_loaded": ["XGBoost Classifier", "Keras LSTM RUL", "SHAP TreeExplainer"]
+        "models_loaded": ["XGBoost Classifier", "Keras LSTM RUL", "SHAP TreeExplainer", "Visual Inspection (CNC Heuristic)"]
     }
 
 if __name__ == "__main__":

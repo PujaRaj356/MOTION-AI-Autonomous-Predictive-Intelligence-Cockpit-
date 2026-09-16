@@ -30,83 +30,56 @@ class DatabaseManager:
                 json.dump(initial_data, f, indent=2)
 
     def _default_machines(self):
-        return [
-            {
-                "machine_id": "M-101",
-                "name": "CNC Milling Machine 01",
-                "machine_type": "CNC Lathe (H)",
-                "status": "HEALTHY",
-                "health_score": 91,
-                "failure_probability": 0.082,
-                "rul": 184,
-                "air_temperature": 24.5,
-                "process_temperature": 34.8,
-                "rpm": 1540,
-                "torque": 42.1,
-                "tool_wear": 45,
-                "last_updated": datetime.now().isoformat()
-            },
-            {
-                "machine_id": "M-102",
-                "name": "CNC Milling Machine 02",
-                "machine_type": "CNC Lathe (L)",
-                "status": "CRITICAL",
-                "health_score": 34,
-                "failure_probability": 0.824,
-                "rul": 47,
-                "air_temperature": 31.2,
-                "process_temperature": 42.5,
-                "rpm": 2450,
-                "torque": 68.4,
-                "tool_wear": 215,
-                "last_updated": datetime.now().isoformat()
-            },
-            {
-                "machine_id": "M-103",
-                "name": "Heavy Duty Router",
-                "machine_type": "Router (M)",
-                "status": "WARNING",
-                "health_score": 61,
-                "failure_probability": 0.471,
-                "rul": 92,
-                "air_temperature": 28.4,
-                "process_temperature": 38.1,
-                "rpm": 1820,
-                "torque": 52.0,
-                "tool_wear": 142,
-                "last_updated": datetime.now().isoformat()
-            },
-            {
-                "machine_id": "M-104",
-                "name": "Precision Spindle 04",
-                "machine_type": "Spindle (H)",
-                "status": "HEALTHY",
-                "health_score": 88,
-                "failure_probability": 0.114,
-                "rul": 165,
-                "air_temperature": 23.8,
-                "process_temperature": 33.9,
-                "rpm": 1490,
-                "torque": 39.5,
-                "tool_wear": 60,
-                "last_updated": datetime.now().isoformat()
-            },
-            {
-                "machine_id": "M-105",
-                "name": "High Speed Drill 05",
-                "machine_type": "Drill (L)",
-                "status": "WARNING",
-                "health_score": 58,
-                "failure_probability": 0.512,
-                "rul": 84,
-                "air_temperature": 29.8,
-                "process_temperature": 40.2,
-                "rpm": 2100,
-                "torque": 58.6,
-                "tool_wear": 178,
-                "last_updated": datetime.now().isoformat()
-            }
+        """Generate 24 monitored machines with varied health states."""
+        import random
+        random.seed(42)
+        types = ["CNC Lathe (H)", "CNC Lathe (L)", "Router (M)", "Spindle (H)", "Drill (L)", "Conveyor (M)", "Hydraulic Press (H)"]
+        names = [
+            "CNC Milling", "Heavy Router", "Precision Spindle", "High Speed Drill",
+            "Conveyor Line", "Hydraulic Press", "Lathe Station", "Grinding Unit"
         ]
+        machines = []
+        for i in range(24):
+            mid = f"M-{101 + i}"
+            health = random.choice([91, 88, 85, 78, 61, 58, 47, 34, 72, 80])
+            if health >= 61:
+                status = "HEALTHY"
+                fail_prob = round(random.uniform(0.05, 0.20), 3)
+            elif health >= 31:
+                status = "WARNING"
+                fail_prob = round(random.uniform(0.35, 0.55), 3)
+            else:
+                status = "CRITICAL"
+                fail_prob = round(random.uniform(0.70, 0.90), 3)
+            machines.append({
+                "machine_id": mid,
+                "name": f"{random.choice(names)} {i + 1:02d}",
+                "machine_type": random.choice(types),
+                "status": status,
+                "health_score": health,
+                "failure_probability": fail_prob,
+                "rul": max(20, int(200 - (100 - health) * 1.8 + random.randint(-15, 15))),
+                "air_temperature": round(random.uniform(22, 32), 1),
+                "process_temperature": round(random.uniform(32, 45), 1),
+                "rpm": random.randint(1400, 2600),
+                "torque": round(random.uniform(35, 70), 1),
+                "tool_wear": random.randint(30, 220),
+                "last_updated": datetime.now().isoformat()
+            })
+        # Ensure spec examples exist
+        machines[1] = {
+            "machine_id": "M-102", "name": "CNC Milling Machine 02", "machine_type": "CNC Lathe (L)",
+            "status": "CRITICAL", "health_score": 34, "failure_probability": 0.824, "rul": 47,
+            "air_temperature": 31.2, "process_temperature": 42.5, "rpm": 2450, "torque": 68.4,
+            "tool_wear": 215, "last_updated": datetime.now().isoformat()
+        }
+        machines[0] = {
+            "machine_id": "M-101", "name": "CNC Milling Machine 01", "machine_type": "CNC Lathe (H)",
+            "status": "HEALTHY", "health_score": 91, "failure_probability": 0.082, "rul": 184,
+            "air_temperature": 24.5, "process_temperature": 34.8, "rpm": 1540, "torque": 42.1,
+            "tool_wear": 45, "last_updated": datetime.now().isoformat()
+        }
+        return machines
 
     def _default_maintenance(self):
         return [

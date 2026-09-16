@@ -66,3 +66,28 @@ class SimulationResponse(BaseModel):
     explanation: str
     parameter_changes: List[Dict[str, Any]]
     timestamp: str
+
+class VisualInspectionRequest(BaseModel):
+    machine_id: str = "M-101"
+    machine_type: str = "CNC"
+    image_base64: str
+
+class CombinedHealthResult(BaseModel):
+    health_score: int
+    sensor_failure_pct: float
+    visual_penalty: int
+    risk_level: str
+
+class VisualInspectionResponse(BaseModel):
+    machine_id: str
+    machine_type: str
+    inspection_type: str
+    component: str
+    condition: str
+    confidence: int
+    detected_issues: List[str]
+    recommendation: str
+    image_metrics: Dict[str, float]
+    model_mode: str
+    combined_health: CombinedHealthResult
+    timestamp: str

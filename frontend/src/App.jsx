@@ -1,110 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import HeadsUpDisplay from './components/cockpit/HeadsUpDisplay';
-import CommandDock from './components/cockpit/CommandDock';
-import FloorSchematicDeck from './components/cockpit/FloorSchematicDeck';
-import NeuralDiagnosticLab from './components/cockpit/NeuralDiagnosticLab';
-import DigitalTwinSandbox from './components/cockpit/DigitalTwinSandbox';
-import DispatchTerminal from './components/cockpit/DispatchTerminal';
-import BenchmarkStudio from './components/cockpit/BenchmarkStudio';
-import { getMachines, getHealth } from './services/api';
-import './styles/theme.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ArchitecturalSidebar from './components/layout/ArchitecturalSidebar';
+import Dashboard from './pages/Dashboard';
+import MachineList from './pages/MachineList';
+import MachineDetails from './pages/MachineDetails';
+import HealthPrediction from './pages/HealthPrediction';
+import RulPrediction from './pages/RulPrediction';
+import WhatIfLab from './pages/WhatIfLab';
+import PredictionHistory from './pages/PredictionHistory';
+import Maintenance from './pages/Maintenance';
+import ModelEvaluation from './pages/ModelEvaluation';
+import VisualInspection from './pages/VisualInspection';
+import { getHealth } from './services/api';
 
-function App() {
-  const [activeMode, setActiveMode] = useState('deck');
-  const [machines, setMachines] = useState([]);
+export default function App() {
   const [systemHealth, setSystemHealth] = useState(null);
-  const [selectedMachine, setSelectedMachine] = useState(null);
-  const [audioEnabled, setAudioEnabled] = useState(false);
 
-  // Load initial fleet data & system health
   useEffect(() => {
-    loadData();
-    const interval = setInterval(loadData, 10000);
+    const load = () => getHealth().then(r => setSystemHealth(r.data)).catch(() => {});
+    load();
+    const interval = setInterval(load, 15000);
     return () => clearInterval(interval);
   }, []);
 
-  // Keyboard shortcut listener (1-5 for modes)
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return;
-      if (e.key === '1') setActiveMode('deck');
-      if (e.key === '2') setActiveMode('neural');
-      if (e.key === '3') setActiveMode('twin');
-      if (e.key === '4') setActiveMode('dispatch');
-      if (e.key === '5') setActiveMode('benchmarks');
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  const loadData = async () => {
-    try {
-      const [mRes, hRes] = await Promise.all([
-        getMachines(),
-        getHealth()
-      ]);
-      setMachines(mRes.data || []);
-      setSystemHealth(hRes.data || {});
-      if (!selectedMachine && mRes.data?.length > 0) {
-        setSelectedMachine(mRes.data[0]);
-      }
-    } catch (err) {
-      console.warn('Backend sync warning:', err);
-    }
-  };
-
-  const handleQuickInject = (machine) => {
-    setSelectedMachine(machine);
-    setActiveMode('neural');
-  };
-
   return (
-    <div className="cockpit-viewport">
-      {/* Top Precision Heads-Up Display */}
-      <HeadsUpDisplay
-        systemHealth={systemHealth}
-        machines={machines}
-        activeMode={activeMode}
-        audioEnabled={audioEnabled}
-        setAudioEnabled={setAudioEnabled}
-      />
-
-      {/* Main Mission Control Workspace */}
-      <main className="cockpit-body">
-        {activeMode === 'deck' && (
-          <FloorSchematicDeck
-            machines={machines}
-            onSelectMachine={setSelectedMachine}
-            onQuickInject={handleQuickInject}
-          />
-        )}
-
-        {activeMode === 'neural' && (
-          <NeuralDiagnosticLab
-            initialMachine={selectedMachine || machines[0]}
-          />
-        )}
-
-        {activeMode === 'twin' && (
-          <DigitalTwinSandbox />
-        )}
-
-        {activeMode === 'dispatch' && (
-          <DispatchTerminal />
-        )}
-
-        {activeMode === 'benchmarks' && (
-          <BenchmarkStudio />
-        )}
-      </main>
-
-      {/* Bottom Floating HUD Command Dock */}
-      <CommandDock
-        activeMode={activeMode}
-        setActiveMode={setActiveMode}
-      />
-    </div>
+    <BrowserRouter>
+      <div className="aurora-bg">
+        <div className="aurora-blob aurora-blob-1"></div>
+        <div className="aurora-blob aurora-blob-2"></div>
+        <div className="aurora-blob aurora-blob-3"></div>
+      </div>
+      <div className="app-layout">
+        <ArchitecturalSidebar systemHealth={systemHealth} />
+        <main className="app-main">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/machines" element={<MachineList />} />
+            <Route path="/machine/:id" element={<MachineDetails />} />
+            <Route path="/predict" element={<HealthPrediction />} />
+            <Route path="/rul" element={<RulPrediction />} />
+            <Route path="/simulation" element={<WhatIfLab />} />
+            <Route path="/history" element={<PredictionHistory />} />
+            <Route path="/maintenance" element={<Maintenance />} />
+            <Route path="/metrics" element={<ModelEvaluation />} />
+            <Route path="/inspection" element={<VisualInspection />} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
   );
 }
-
-export default App;
