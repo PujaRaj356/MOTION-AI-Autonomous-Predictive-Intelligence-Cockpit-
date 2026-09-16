@@ -1409,6 +1409,193 @@
         "risk_level": "HEALTHY"
       },
       "timestamp": "2026-09-16 10:00:01"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "WARNING",
+      "confidence": 91,
+      "detected_issues": [
+        "Tip degradation \u2014 dark worn regions detected",
+        "Surface damage \u2014 high contrast anomalies"
+      ],
+      "recommendation": "Schedule tool inspection. Moderate wear indicators detected \u2014 monitor closely.",
+      "image_metrics": {
+        "edge_density": 0.0785,
+        "dark_ratio": 0.4868,
+        "brightness": 0.4574,
+        "contrast": 0.59
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 78,
+        "sensor_failure_pct": 2.3,
+        "visual_penalty": 15,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-09-16 10:39:23"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "WARNING",
+      "confidence": 94,
+      "detected_issues": [
+        "Moderate edge wear patterns",
+        "Tip degradation \u2014 dark worn regions detected"
+      ],
+      "recommendation": "Schedule tool inspection. Moderate wear indicators detected \u2014 monitor closely.",
+      "image_metrics": {
+        "edge_density": 0.1208,
+        "dark_ratio": 0.7455,
+        "brightness": 0.2392,
+        "contrast": 0.4992
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 78,
+        "sensor_failure_pct": 2.3,
+        "visual_penalty": 15,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-09-16 10:42:29"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "WARNING",
+      "confidence": 81,
+      "detected_issues": [
+        "Tip degradation \u2014 dark worn regions detected"
+      ],
+      "recommendation": "Schedule tool inspection. Moderate wear indicators detected \u2014 monitor closely.",
+      "image_metrics": {
+        "edge_density": 0.0,
+        "dark_ratio": 1.0,
+        "brightness": 0.0784,
+        "contrast": 0.0
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 78,
+        "sensor_failure_pct": 2.3,
+        "visual_penalty": 15,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-09-16 10:48:57"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "WARNING",
+      "confidence": 85,
+      "detected_issues": [
+        "Possible tip degradation",
+        "Surface damage \u2014 high contrast anomalies"
+      ],
+      "recommendation": "Schedule tool inspection. Moderate wear indicators detected \u2014 monitor closely.",
+      "image_metrics": {
+        "edge_density": 0.036,
+        "dark_ratio": 0.2655,
+        "brightness": 0.7532,
+        "contrast": 0.8104
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 78,
+        "sensor_failure_pct": 2.3,
+        "visual_penalty": 15,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-09-16 10:50:12"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "WARNING",
+      "confidence": 82,
+      "detected_issues": [
+        "Tip degradation \u2014 dark worn regions detected"
+      ],
+      "recommendation": "Schedule tool inspection. Moderate wear indicators detected \u2014 monitor closely.",
+      "image_metrics": {
+        "edge_density": 0.0156,
+        "dark_ratio": 1.0,
+        "brightness": 0.1961,
+        "contrast": 0.0
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 78,
+        "sensor_failure_pct": 2.3,
+        "visual_penalty": 15,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-09-16 11:21:44"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "GOOD",
+      "confidence": 72,
+      "detected_issues": [
+        "No significant visual defects detected"
+      ],
+      "recommendation": "Cutting tool appears within acceptable visual condition. Continue normal monitoring.",
+      "image_metrics": {
+        "edge_density": 0.0156,
+        "dark_ratio": 0.0,
+        "brightness": 0.502,
+        "contrast": 0.0
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 93,
+        "sensor_failure_pct": 2.3,
+        "visual_penalty": 0,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-09-16 11:35:16"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "SEVERE WEAR",
+      "confidence": 95,
+      "detected_issues": [
+        "Moderate edge wear patterns",
+        "Tip degradation \u2014 dark worn regions detected",
+        "Surface damage \u2014 high contrast anomalies"
+      ],
+      "recommendation": "Inspect and replace cutting tool immediately. Severe visual wear indicators detected.",
+      "image_metrics": {
+        "edge_density": 0.0832,
+        "dark_ratio": 0.443,
+        "brightness": 0.4745,
+        "contrast": 0.5912
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 63,
+        "sensor_failure_pct": 2.3,
+        "visual_penalty": 30,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-09-16 11:35:42"
     }
   ]
 }

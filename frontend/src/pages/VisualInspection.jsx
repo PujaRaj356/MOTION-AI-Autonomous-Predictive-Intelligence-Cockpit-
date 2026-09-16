@@ -1,6 +1,6 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { runVisualInspection } from '../services/api';
-import { Camera, Upload, Scan, Wrench, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Camera, Upload, Scan, Wrench, AlertTriangle, CheckCircle, RefreshCw } from 'lucide-react';
 
 const MACHINE_TYPES = [
   { id: 'CNC', label: 'CNC Machine', component: 'Cutting Tool', active: true, desc: 'Tool wear & damage detection' },
@@ -29,30 +29,62 @@ export default function VisualInspection() {
     setCameraActive(false);
   }, []);
 
+  // Ensure stream tracks are attached when video element mounts in the DOM
+  useEffect(() => {
+    if (cameraActive && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+      videoRef.current.play().catch(err => {
+        console.warn('Video play interrupted or auto-play prevented:', err);
+      });
+    }
+  }, [cameraActive]);
+
+  // Clean up tracks on unmount
+  useEffect(() => {
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(t => t.stop());
+      }
+    };
+  }, []);
+
   const startCamera = async () => {
     setError(null);
     stopCamera();
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
-      streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play();
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+          audio: false,
+        });
+      } catch {
+        // Fallback for laptops and desktop webcams that don't support environment facingMode
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false,
+        });
       }
+      streamRef.current = stream;
       setCameraActive(true);
       setPreview(null);
       setResult(null);
-    } catch {
-      setError('Camera access denied or unavailable. Use image upload instead.');
+    } catch (err) {
+      console.error('Camera initialization failed:', err);
+      setError('Camera access denied or unavailable. Please grant camera permission in your browser or use image upload.');
     }
   };
 
   const captureFrame = () => {
     if (!videoRef.current || !canvasRef.current) return;
+    const video = videoRef.current;
     const canvas = canvasRef.current;
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
-    canvas.getContext('2d').drawImage(videoRef.current, 0, 0);
+    const w = video.videoWidth || video.clientWidth || 640;
+    const h = video.videoHeight || video.clientHeight || 480;
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, w, h);
     const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
     setPreview(dataUrl);
     stopCamera();
@@ -77,6 +109,7 @@ export default function VisualInspection() {
     }
     setLoading(true);
     setError(null);
+    setResult(null);
     try {
       const res = await runVisualInspection({
         machine_id: machineId,
@@ -86,6 +119,7 @@ export default function VisualInspection() {
       setResult(res.data);
     } catch (e) {
       setError(e.response?.data?.detail || 'Inspection failed. Ensure the backend is running.');
+      setResult(null);
     } finally {
       setLoading(false);
     }

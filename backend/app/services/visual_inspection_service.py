@@ -3,14 +3,92 @@ import io
 from datetime import datetime
 from PIL import Image, ImageFilter, ImageStat
 import numpy as np
+import torch
+import torchvision.models as models
 from backend.app.database.connection import db_manager
 from ml.models.health_engine import HealthEngine
+
+
+class IndustrialTargetValidator:
+    """
+    Validates that the scanned image is an industrial machine / tool
+    and not common non-industrial items (e.g. computer mouse, smartphone, keyboard, pet, food).
+    """
+    def __init__(self):
+        self._model = None
+        self._preprocess = None
+        self._categories = None
+        self._initialized = False
+
+    def _lazy_init(self):
+        if self._initialized:
+            return
+        try:
+            weights = models.MobileNet_V3_Small_Weights.DEFAULT
+            self._model = models.mobilenet_v3_small(weights=weights).eval()
+            self._preprocess = weights.transforms()
+            self._categories = weights.meta["categories"]
+            self._initialized = True
+        except Exception as e:
+            print(f"[VisualInspection] Target validator init warning: {e}")
+            self._initialized = False
+
+    def validate(self, img: Image.Image) -> tuple[bool, str, float]:
+        self._lazy_init()
+        if not self._initialized or self._model is None:
+            return True, "Industrial Object", 1.0
+
+        try:
+            tensor = self._preprocess(img).unsqueeze(0)
+            with torch.no_grad():
+                preds = self._model(tensor).squeeze(0).softmax(0)
+                top10 = torch.topk(preds, 10)
+
+            top_idx = top10.indices[0].item()
+            top_label = self._categories[top_idx]
+            top_score = top10.values[0].item()
+
+            forbidden_keywords = [
+                'mouse', 'mousetrap', 'keyboard', 'laptop', 'telephone', 'cellphone', 'cellular',
+                'joystick', 'screen', 'monitor', 'television', 'remote control', 'remote',
+                'coffee mug', 'mug', 'cup', 'water bottle', 'bottle', 'plate', 'saucer',
+                'pizza', 'banana', 'apple', 'orange', 'broccoli', 'sandwich', 'burger',
+                'sunglass', 'sunglasses', 'shoe', 'running shoe', 'sandal', 'sock', 'boot',
+                'sweatshirt', 'jersey', 'suit', 'coat', 'jean', 'pajama', 'pillow', 'quilt',
+                'teddy bear', 'toys', 'dog', 'cat', 'bird', 'face', 'person',
+                'speaker', 'loudspeaker', 'puck', 'pan', 'frying pan', 'pot', 'strainer',
+                'fork', 'spoon', 'knife', 'bowl', 'ball', 'racket', 'book', 'paper',
+                'wallet', 'bag', 'backpack', 'guitar', 'piano', 'desk', 'chair', 'table',
+                'hand-held computer', 'hand blower', 'handkerchief', 'vacuum',
+                'hair dryer', 'electric fan', 'microwave', 'toaster', 'refrigerator'
+            ]
+
+            # 1. Animal / Organism check (ImageNet indices 0-397)
+            if top_idx < 398 and top_score > 0.08:
+                clean_name = top_label.replace("_", " ").title()
+                return False, clean_name, top_score
+
+            # 2. Check top predictions for forbidden non-industrial items
+            for idx, score in zip(top10.indices[:6], top10.values[:6]):
+                label = self._categories[idx.item()].lower()
+                for kw in forbidden_keywords:
+                    if kw in label and score.item() > 0.03:
+                        clean_name = self._categories[idx.item()].replace("_", " ").title()
+                        return False, clean_name, score.item()
+
+            return True, top_label.replace("_", " ").title(), top_score
+        except Exception as e:
+            print(f"[VisualInspection] Validation pass error: {e}")
+            return True, "Industrial Equipment", 1.0
+
+
+validator = IndustrialTargetValidator()
 
 
 class VisualInspectionService:
     """
     Phase 1 CNC visual inspection using heuristic image analysis.
-    Architecture is ready for CNN model replacement — clearly labeled as development mode.
+    Validates that the target is industrial machinery before analysis.
     """
 
     CNC_THRESHOLDS = {
@@ -21,9 +99,18 @@ class VisualInspectionService:
     }
 
     def analyze_image(self, image_base64: str, machine_type: str, machine_id: str) -> dict:
-
-
         img = self._decode_image(image_base64)
+
+        # Validate target is an industrial object
+        is_valid, detected_target, conf = validator.validate(img)
+        if not is_valid:
+            conf_pct = int(conf * 100)
+            raise ValueError(
+                f"Non-Industrial Object Detected: '{detected_target}' ({conf_pct}% confidence). "
+                f"Visual inspection only supports industrial machinery (e.g., {machine_type} Cutting Tool, Spindle, Conveyor, or Hydraulic Assembly). "
+                f"Please point camera at a valid industrial machine component."
+            )
+
         metrics = self._compute_metrics(img)
         if machine_type == "CNC":
             assessment = self._assess_cnc(metrics)
