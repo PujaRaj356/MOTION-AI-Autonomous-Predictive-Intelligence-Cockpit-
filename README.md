@@ -1,4 +1,4 @@
-# MOTION-AI: Autonomous Predictive Intelligence Cockpit
+# GearGuard: Autonomous Sensor Analytics and Industrial failure Prevention
 
 ## Project Abstract
 
@@ -37,7 +37,7 @@ flowchart TD
         Resize --> DL{CNN ResNet Defect Detection}
     end
 
-    subgraph MOTION-AI Cockpit
+    subgraph GearGuard Cockpit
         ML --> Dash[Real-Time Dashboard]
         DL --> Dash
     end

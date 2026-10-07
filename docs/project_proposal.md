@@ -1,7 +1,7 @@
-# Project Proposal: Autonomous Predictive Intelligence Cockpit
+# Project Proposal: Autonomous Sensor Analytics and Industrial failure Prevention
 
 ## Title of the Project
-**MOTION-AI: Autonomous Predictive Intelligence Cockpit for Industrial Maintenance**
+**GearGuard: Autonomous Sensor Analytics and Industrial failure Prevention for Industrial Maintenance**
 
 ## Problem Statement and Motivation
 In modern manufacturing and industrial environments, unexpected machine downtime leads to massive financial losses and supply chain bottlenecks. Traditional maintenance strategies—run-to-failure or fixed-schedule preventive maintenance—are either too risky or highly inefficient. 

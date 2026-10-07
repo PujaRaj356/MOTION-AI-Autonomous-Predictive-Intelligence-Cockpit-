@@ -1,11 +1,11 @@
-# Project Proposal: MOTION-AI
+# Project Proposal: GearGuard
 
-**Title:** Autonomous Predictive Intelligence Cockpit
+**Title:** Autonomous Sensor Analytics and Industrial failure Prevention
 **Team Size:** 2 Students
 
 ## 1. Problem Statement
 In modern manufacturing, unplanned machine downtime (e.g., CNC machines, conveyor belts) leads to massive financial losses and production delays. Traditional maintenance strategies are purely reactive (fixing a machine after it breaks) or schedule-based (replacing parts too early). 
-**MOTION-AI** solves this by providing a centralized "Cockpit" dashboard that uses live sensor telemetry to predict exactly when a machine will fail before it actually happens.
+**GearGuard** solves this by providing a centralized "Cockpit" dashboard that uses live sensor telemetry to predict exactly when a machine will fail before it actually happens.
 
 ## 2. ML Task Type
 The project utilizes a hybrid Machine Learning approach:
@@ -47,7 +47,7 @@ graph TD
         API <--> ML
     end
 
-    subgraph MOTION-AI Cockpit
+    subgraph GearGuard Cockpit
         WEB[React Web Dashboard]
         MOB[Android Mobile App]
         

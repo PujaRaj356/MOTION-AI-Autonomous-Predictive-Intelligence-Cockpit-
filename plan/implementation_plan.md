@@ -1,6 +1,6 @@
 # Project Alignment Plan: AI Predictive Maintenance Intelligence Cockpit
 
-This plan outlines how we will adapt the current `MOTION-AI` project to perfectly align with your academic evaluation rubric, milestones, and deliverables.
+This plan outlines how we will adapt the current `GearGuard` project to perfectly align with your academic evaluation rubric, milestones, and deliverables.
 
 ## User Review Required
 > [!IMPORTANT]
@@ -8,7 +8,7 @@ This plan outlines how we will adapt the current `MOTION-AI` project to perfectl
 
 ## 1. Project Proposal & Definition
 The project perfectly fits the **Intermediate/Advanced** scoping level. We will formalize it with the following details:
-- **Title**: Autonomous Predictive Intelligence Cockpit for Industrial Maintenance
+- **Title**: Autonomous Sensor Analytics and Industrial failure Prevention for Industrial Maintenance
 - **Problem Statement**: Predicting industrial machine failure and Remaining Useful Life (RUL) to minimize downtime.
 - **ML Task Type**: Classification (Failure prediction) & Regression (RUL estimation).
 - **Models**: XGBoost, Keras LSTM, SHAP Explainer.

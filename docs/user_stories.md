@@ -1,6 +1,6 @@
 # User Stories and ML Tasks
 
-In accordance with the project guidelines, this document outlines the core user stories and their corresponding Machine Learning (ML) data tasks for the **MOTION-AI Predictive Intelligence Cockpit**.
+In accordance with the project guidelines, this document outlines the core user stories and their corresponding Machine Learning (ML) data tasks for the **GearGuard Predictive Intelligence Cockpit**.
 
 ## 1. Machine Failure Prediction (Classification)
 
