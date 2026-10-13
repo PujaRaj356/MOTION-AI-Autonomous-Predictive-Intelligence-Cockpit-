@@ -1,12 +1,13 @@
-import shap
 import numpy as np
 import joblib
 
 class ShapExplainer:
     def __init__(self, model_path='ml/saved_models/xgboost_failure.pkl', scaler_path='ml/saved_models/xgboost_scaler.pkl'):
-        self.model = joblib.load(model_path)
-        self.scaler = joblib.load(scaler_path)
-        self.explainer = shap.TreeExplainer(self.model)
+        self.model_path = model_path
+        self.scaler_path = scaler_path
+        self._model = None
+        self._scaler = None
+        self._explainer = None
         self.feature_names = [
             'Air Temperature',
             'Process Temperature',
@@ -15,6 +16,25 @@ class ShapExplainer:
             'Tool Wear',
             'Machine Type'
         ]
+
+    @property
+    def model(self):
+        if self._model is None:
+            self._model = joblib.load(self.model_path)
+        return self._model
+
+    @property
+    def scaler(self):
+        if self._scaler is None:
+            self._scaler = joblib.load(self.scaler_path)
+        return self._scaler
+
+    @property
+    def explainer(self):
+        if self._explainer is None:
+            import shap
+            self._explainer = shap.TreeExplainer(self.model)
+        return self._explainer
 
     def explain_instance(self, input_features):
         """

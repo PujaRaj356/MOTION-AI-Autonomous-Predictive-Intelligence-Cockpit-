@@ -1,10 +1,7 @@
 import os
-os.environ['KERAS_BACKEND'] = 'torch'
-
 import joblib
 import json
 import numpy as np
-import keras
 from datetime import datetime
 from ml.explainability.shap_explainer import ShapExplainer
 from ml.models.health_engine import HealthEngine
@@ -15,10 +12,25 @@ class PredictionService:
         print("Initializing Prediction Engine...")
         self.xgb_model = joblib.load('ml/saved_models/xgboost_failure.pkl')
         self.xgb_scaler = joblib.load('ml/saved_models/xgboost_scaler.pkl')
-        self.lstm_model = keras.models.load_model('ml/saved_models/lstm_rul.keras')
-        self.lstm_scaler = joblib.load('ml/saved_models/lstm_scaler.pkl')
+        self._lstm_model = None
+        self._lstm_scaler = None
         self.shap_explainer = ShapExplainer()
         self.type_map = {'L': 0, 'M': 1, 'H': 2}
+
+    @property
+    def lstm_model(self):
+        if self._lstm_model is None:
+            print("[PredictionService] Lazy loading Keras LSTM RUL model...")
+            os.environ['KERAS_BACKEND'] = 'torch'
+            import keras
+            self._lstm_model = keras.models.load_model('ml/saved_models/lstm_rul.keras')
+        return self._lstm_model
+
+    @property
+    def lstm_scaler(self):
+        if self._lstm_scaler is None:
+            self._lstm_scaler = joblib.load('ml/saved_models/lstm_scaler.pkl')
+        return self._lstm_scaler
 
     def predict_failure(self, request_data) -> dict:
         m_type = request_data.machine_type.upper() if hasattr(request_data, 'machine_type') and request_data.machine_type else 'L'

@@ -3,8 +3,6 @@ import io
 from datetime import datetime
 from PIL import Image, ImageFilter, ImageStat
 import numpy as np
-import torch
-import torchvision.models as models
 from backend.app.database.connection import db_manager
 from ml.models.health_engine import HealthEngine
 
@@ -24,6 +22,8 @@ class IndustrialTargetValidator:
         if self._initialized:
             return
         try:
+            import torch
+            import torchvision.models as models
             weights = models.MobileNet_V3_Small_Weights.DEFAULT
             self._model = models.mobilenet_v3_small(weights=weights).eval()
             self._preprocess = weights.transforms()
@@ -39,6 +39,7 @@ class IndustrialTargetValidator:
             return True, "Industrial Object", 1.0
 
         try:
+            import torch
             tensor = self._preprocess(img).unsqueeze(0)
             with torch.no_grad():
                 preds = self._model(tensor).squeeze(0).softmax(0)
