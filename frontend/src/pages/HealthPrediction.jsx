@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { predictFailure } from '../services/api';
+import React, { useState, useEffect } from 'react';
+import { predictFailure, getMachines } from '../services/api';
 import HealthGauge from '../components/common/HealthGauge';
 import ShapBarChart from '../components/common/ShapBarChart';
 import { Zap, AlertTriangle, Shield, Lightbulb } from 'lucide-react';
@@ -16,6 +16,44 @@ export default function HealthPrediction() {
   });
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [machines, setMachines] = useState([]);
+
+  useEffect(() => {
+    getMachines()
+      .then(res => {
+        if (res.data && res.data.length > 0) {
+          setMachines(res.data);
+          const first = res.data[0];
+          setForm({
+            machine_id: first.machine_id,
+            air_temperature: first.air_temperature || 24.5,
+            process_temperature: first.process_temperature || 34.8,
+            rpm: first.rpm || 1540,
+            torque: first.torque || 42.1,
+            tool_wear: first.tool_wear || 45,
+            machine_type: (first.machine_type && first.machine_type.includes('(H)') ? 'H' : (first.machine_type && first.machine_type.includes('(M)') ? 'M' : 'L'))
+          });
+        }
+      })
+      .catch(console.error);
+  }, []);
+
+  const handleSelectMachine = (id) => {
+    const selected = machines.find(m => m.machine_id === id);
+    if (selected) {
+      setForm({
+        machine_id: selected.machine_id,
+        air_temperature: selected.air_temperature || 25.0,
+        process_temperature: selected.process_temperature || 35.0,
+        rpm: selected.rpm || 1500,
+        torque: selected.torque || 42.0,
+        tool_wear: selected.tool_wear || 50,
+        machine_type: (selected.machine_type && selected.machine_type.includes('(H)') ? 'H' : (selected.machine_type && selected.machine_type.includes('(M)') ? 'M' : 'L'))
+      });
+    } else {
+      handleChange('machine_id', id);
+    }
+  };
 
   const handleChange = (field, value) => {
     setForm(prev => ({ ...prev, [field]: value }));
@@ -56,38 +94,46 @@ export default function HealthPrediction() {
         <div className="card">
           <span className="card-title">Sensor Input Panel</span>
 
-          <div className="input-group" style={{ marginTop: 16, marginBottom: 12 }}>
-            <span className="input-label">Machine ID</span>
-            <select className="input-field" value={form.machine_id} onChange={e => handleChange('machine_id', e.target.value)}>
-              {['M-101', 'M-102', 'M-103', 'M-104', 'M-105'].map(id => (
-                <option key={id} value={id}>{id}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="input-group" style={{ marginBottom: 12 }}>
-            <span className="input-label">Machine Type</span>
-            <select className="input-field" value={form.machine_type} onChange={e => handleChange('machine_type', e.target.value)}>
-              <option value="L">L — Low Quality</option>
-              <option value="M">M — Medium Quality</option>
-              <option value="H">H — High Quality</option>
-            </select>
-          </div>
-
-          {fields.map(f => (
-            <div key={f.key} className="input-group" style={{ marginBottom: 12 }}>
-              <span className="input-label">{f.label} <span className="input-unit">({f.unit})</span></span>
-              <input
-                type="number"
-                className="input-field"
-                value={form[f.key]}
-                onChange={e => handleChange(f.key, parseFloat(e.target.value) || 0)}
-                min={f.min}
-                max={f.max}
-                step={f.step}
-              />
+          <div className="input-grid" style={{ marginTop: 16 }}>
+            <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+              <span className="input-label">Registered Machine</span>
+              <select className="input-field" value={form.machine_id} onChange={e => handleSelectMachine(e.target.value)}>
+                {machines.length > 0 ? (
+                  machines.map(m => (
+                    <option key={m.machine_id} value={m.machine_id}>
+                      {m.machine_id} — {m.name || 'Machine'}
+                    </option>
+                  ))
+                ) : (
+                  <option value="M-101">M-101</option>
+                )}
+              </select>
             </div>
-          ))}
+
+            <div className="input-group">
+              <span className="input-label">Machine Grade</span>
+              <select className="input-field" value={form.machine_type} onChange={e => handleChange('machine_type', e.target.value)}>
+                <option value="H">Heavy Duty (H)</option>
+                <option value="M">Medium Duty (M)</option>
+                <option value="L">Light Duty (L)</option>
+              </select>
+            </div>
+
+            {fields.map(f => (
+              <div key={f.key} className="input-group">
+                <span className="input-label">{f.label} <span className="input-unit">({f.unit})</span></span>
+                <input
+                  type="number"
+                  className="input-field"
+                  value={form[f.key]}
+                  onChange={e => handleChange(f.key, parseFloat(e.target.value) || 0)}
+                  min={f.min}
+                  max={f.max}
+                  step={f.step}
+                />
+              </div>
+            ))}
+          </div>
 
           <button
             className="btn btn-primary btn-lg"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ArchitecturalSidebar from './components/layout/ArchitecturalSidebar';
+import HeadsUpDisplay from './components/cockpit/HeadsUpDisplay';
 import Dashboard from './pages/Dashboard';
 import MachineList from './pages/MachineList';
 import MachineDetails from './pages/MachineDetails';
@@ -11,15 +12,21 @@ import PredictionHistory from './pages/PredictionHistory';
 import Maintenance from './pages/Maintenance';
 import ModelEvaluation from './pages/ModelEvaluation';
 import VisualInspection from './pages/VisualInspection';
-import { getHealth } from './services/api';
+import { getHealth, getMachines } from './services/api';
 
 export default function App() {
   const [systemHealth, setSystemHealth] = useState(null);
+  const [machines, setMachines] = useState([]);
+  const [audioEnabled, setAudioEnabled] = useState(false);
+
+  const loadData = () => {
+    getHealth().then(r => setSystemHealth(r.data)).catch(() => {});
+    getMachines().then(r => setMachines(r.data)).catch(() => {});
+  };
 
   useEffect(() => {
-    const load = () => getHealth().then(r => setSystemHealth(r.data)).catch(() => {});
-    load();
-    const interval = setInterval(load, 15000);
+    loadData();
+    const interval = setInterval(loadData, 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -32,20 +39,28 @@ export default function App() {
       </div>
       <div className="app-layout">
         <ArchitecturalSidebar systemHealth={systemHealth} />
-        <main className="app-main">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/machines" element={<MachineList />} />
-            <Route path="/machine/:id" element={<MachineDetails />} />
-            <Route path="/predict" element={<HealthPrediction />} />
-            <Route path="/rul" element={<RulPrediction />} />
-            <Route path="/simulation" element={<WhatIfLab />} />
-            <Route path="/history" element={<PredictionHistory />} />
-            <Route path="/maintenance" element={<Maintenance />} />
-            <Route path="/metrics" element={<ModelEvaluation />} />
-            <Route path="/inspection" element={<VisualInspection />} />
-          </Routes>
-        </main>
+        <div className="app-viewport">
+          <HeadsUpDisplay 
+            systemHealth={systemHealth} 
+            machines={machines} 
+            audioEnabled={audioEnabled} 
+            setAudioEnabled={setAudioEnabled} 
+          />
+          <main className="app-main">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/machines" element={<MachineList />} />
+              <Route path="/machine/:id" element={<MachineDetails />} />
+              <Route path="/predict" element={<HealthPrediction />} />
+              <Route path="/rul" element={<RulPrediction />} />
+              <Route path="/simulation" element={<WhatIfLab />} />
+              <Route path="/history" element={<PredictionHistory />} />
+              <Route path="/maintenance" element={<Maintenance />} />
+              <Route path="/metrics" element={<ModelEvaluation />} />
+              <Route path="/inspection" element={<VisualInspection />} />
+            </Routes>
+          </main>
+        </div>
       </div>
     </BrowserRouter>
   );

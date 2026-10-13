@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getMachines, getHealth } from '../services/api';
-import { Activity, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import { Activity, AlertTriangle, CheckCircle2, Clock, Cpu, ShieldAlert, Sliders, ArrowUpRight, Gauge, Zap } from 'lucide-react';
 
 export default function Dashboard() {
   const [machines, setMachines] = useState([]);
   const [systemHealth, setSystemHealth] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeFilter, setActiveFilter] = useState('ALL');
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const navigate = useNavigate();
 
@@ -25,172 +26,275 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 10000);
+    const interval = setInterval(loadData, 8000);
     return () => clearInterval(interval);
   }, []);
 
-  const avgHealth = machines.length
-    ? Math.round(machines.reduce((s, m) => s + (m.health_score || 0), 0) / machines.length)
-    : 0;
   const criticalCount = machines.filter(m => (m.status || '').toUpperCase() === 'CRITICAL').length;
   const warningCount = machines.filter(m => (m.status || '').toUpperCase() === 'WARNING').length;
   const healthyCount = machines.filter(m => (m.status || '').toUpperCase() === 'HEALTHY').length;
+  const avgHealth = machines.length
+    ? Math.round(machines.reduce((s, m) => s + (m.health_score || 0), 0) / machines.length)
+    : 0;
 
-  if (loading) {
-    return <div className="spinner-container"><div className="spinner" /></div>;
+  const filteredMachines = machines.filter(m => {
+    if (activeFilter === 'ALL') return true;
+    return (m.status || '').toUpperCase() === activeFilter;
+  });
+
+  if (loading && machines.length === 0) {
+    return (
+      <div className="spinner-container">
+        <div className="spinner" />
+      </div>
+    );
   }
 
   return (
     <div>
-      {/* Hero Section */}
+      {/* Cockpit Hero Section */}
       <div className="hero-section">
         <div>
-          <div className="page-header-eyebrow">Predictive Maintenance Intelligence</div>
-          <div className="hero-title">Predict failures before they happen.</div>
+          <div className="page-header-eyebrow">
+            <Zap size={13} /> SATELLITE INDUSTRIAL TELEMETRY // SECTOR ALPHA
+          </div>
+          <div className="hero-title">GearGuard Industrial Failure Prevention Cockpit</div>
           <p className="hero-subtitle">
-            AI-powered predictive maintenance for industrial machines. Combine machine learning,
-            deep learning, and explainable AI to detect failure risk, estimate remaining useful life,
-            and make maintenance decisions earlier.
+            Autonomous multi-sensor diagnostics powered by XGBoost failure risk classifier and Keras LSTM
+            Remaining Useful Life forecasting. Real-time telemetry monitoring across 15 active shop-floor units.
           </p>
           <div className="hero-actions">
             <button className="btn btn-primary" onClick={() => navigate('/predict')}>
-              Check Machine Health
+              <Cpu size={15} /> Launch Diagnostic Lab
             </button>
             <button className="btn btn-secondary" onClick={() => navigate('/simulation')}>
-              Run What-If Simulation
+              <Sliders size={15} /> Digital Twin Simulation
             </button>
           </div>
         </div>
         <div className="hero-meta">
           <div className="hero-meta-item">
-            Last updated: <strong>{lastUpdated.toLocaleTimeString()}</strong>
+            Telemetry Feed: <strong style={{ color: 'var(--signal-green)' }}>LIVE (10s sync)</strong>
           </div>
           <div className="hero-meta-item">
-            System status: <strong style={{ color: 'var(--accent-sage)' }}>{systemHealth?.status || 'ONLINE'}</strong>
+            AI Engine: <strong>XGBoost + LSTM + SHAP</strong>
           </div>
           <div className="hero-meta-item">
-            Machines monitored: <strong>{machines.length}</strong>
+            Factory Units Monitored: <strong style={{ color: 'var(--signal-mint)' }}>{machines.length} Machines</strong>
           </div>
         </div>
       </div>
 
-      {/* Summary Cards */}
+      {/* KPI Metrics Grid */}
       <div className="metrics-grid">
-        <div className="metric-card sage">
-          <div className="metric-label">Machines Monitored</div>
-          <div className="metric-value">{machines.length}</div>
+        <div className="metric-card orange">
+          <div className="metric-label">Monitored Fleet</div>
+          <div className="metric-value">{machines.length} <span className="metric-unit">Units</span></div>
         </div>
         <div className="metric-card sage">
-          <div className="metric-label">Healthy</div>
-          <div className="metric-value" style={{ color: 'var(--accent-sage)' }}>{healthyCount}</div>
+          <div className="metric-label">Optimal Health</div>
+          <div className="metric-value" style={{ color: 'var(--signal-green)' }}>
+            {healthyCount} <span className="metric-unit">Online</span>
+          </div>
         </div>
         <div className="metric-card amber">
-          <div className="metric-label">Warning</div>
-          <div className="metric-value" style={{ color: 'var(--accent-amber)' }}>{warningCount}</div>
+          <div className="metric-label">Elevated Degradation</div>
+          <div className="metric-value" style={{ color: 'var(--signal-amber)' }}>
+            {warningCount} <span className="metric-unit">Warning</span>
+          </div>
         </div>
         <div className="metric-card red">
-          <div className="metric-label">Critical</div>
-          <div className="metric-value" style={{ color: 'var(--accent-red)' }}>{criticalCount}</div>
+          <div className="metric-label">Critical Breakdown Hazard</div>
+          <div className="metric-value" style={{ color: 'var(--signal-red)' }}>
+            {criticalCount} <span className="metric-unit">Urgent</span>
+          </div>
         </div>
-        <div className="metric-card orange">
-          <div className="metric-label">Average Health</div>
-          <div className="metric-value">{avgHealth}<span className="metric-unit">%</span></div>
+        <div className="metric-card sage">
+          <div className="metric-label">Fleet Health Index</div>
+          <div className="metric-value">
+            {avgHealth}<span className="metric-unit">%</span>
+          </div>
         </div>
       </div>
 
-      {/* Machine Health Overview */}
-      <div className="card" style={{ marginBottom: 24 }}>
+      {/* Machine Fleet Explorer */}
+      <div className="card" style={{ marginBottom: 28 }}>
         <div className="card-header">
-          <span className="card-title">Machine Health Overview</span>
-          <button className="btn btn-sm btn-secondary" onClick={() => navigate('/machines')}>
-            View All
-          </button>
-        </div>
-        <div className="machine-cards-grid">
-          {machines.slice(0, 12).map(m => (
-            <div
-              key={m.machine_id}
-              className="machine-card"
-              onClick={() => navigate(`/machine/${m.machine_id}`)}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span className="card-title">
+              <Activity size={18} color="var(--signal-mint)" /> Monitored Industrial Fleet Overview
+            </span>
+          </div>
+          <div className="filter-tabs">
+            <button
+              className={`filter-tab ${activeFilter === 'ALL' ? 'active' : ''}`}
+              onClick={() => setActiveFilter('ALL')}
             >
-              <div className="machine-card-header">
-                <span className="machine-card-id">{m.machine_id}</span>
-                <span className={`status-badge ${(m.status || '').toLowerCase()}`}>{m.status}</span>
-              </div>
-              <div className="machine-card-stats">
-                <div className="machine-stat">
-                  <span className="machine-stat-label">Health</span>
-                  <span className="machine-stat-value">{m.health_score}</span>
-                </div>
-                <div className="machine-stat">
-                  <span className="machine-stat-label">Failure Risk</span>
-                  <span className="machine-stat-value" style={{
-                    color: (m.failure_probability || 0) > 0.5 ? 'var(--accent-red)' : 'inherit'
-                  }}>
-                    {((m.failure_probability || 0) * 100).toFixed(1)}%
-                  </span>
-                </div>
-                <div className="machine-stat">
-                  <span className="machine-stat-label">RUL</span>
-                  <span className="machine-stat-value">{m.rul || '—'} cycles</span>
-                </div>
-                <div className="machine-stat">
-                  <span className="machine-stat-label">Last Update</span>
-                  <span className="machine-stat-value" style={{ fontSize: '0.68rem' }}>
-                    {(m.last_updated || '—').slice(0, 10)}
-                  </span>
-                </div>
-              </div>
-              <button
-                className="btn btn-sm btn-primary"
-                style={{ width: '100%' }}
-                onClick={(e) => { e.stopPropagation(); navigate(`/machine/${m.machine_id}`); }}
+              All Units ({machines.length})
+            </button>
+            <button
+              className={`filter-tab ${activeFilter === 'HEALTHY' ? 'active' : ''}`}
+              onClick={() => setActiveFilter('HEALTHY')}
+            >
+              🟢 Healthy ({healthyCount})
+            </button>
+            <button
+              className={`filter-tab ${activeFilter === 'WARNING' ? 'active' : ''}`}
+              onClick={() => setActiveFilter('WARNING')}
+            >
+              🟡 Warning ({warningCount})
+            </button>
+            <button
+              className={`filter-tab ${activeFilter === 'CRITICAL' ? 'active' : ''}`}
+              onClick={() => setActiveFilter('CRITICAL')}
+            >
+              🔴 Critical ({criticalCount})
+            </button>
+          </div>
+        </div>
+
+        {/* 15 Machine Cards Grid */}
+        <div className="machine-cards-grid">
+          {filteredMachines.map(m => {
+            const statusLower = (m.status || 'healthy').toLowerCase();
+            const failProbPct = ((m.failure_probability || 0) * 100).toFixed(1);
+            const isCritical = statusLower === 'critical';
+            const isWarning = statusLower === 'warning';
+
+            return (
+              <div
+                key={m.machine_id}
+                className={`machine-card status-${statusLower}`}
+                onClick={() => navigate(`/machine/${m.machine_id}`)}
               >
-                View Details
-              </button>
-            </div>
-          ))}
+                <div className="machine-card-header">
+                  <div>
+                    <div className="machine-card-id">{m.machine_id}</div>
+                    <div className="machine-card-name">{m.name || 'Industrial Machine'}</div>
+                  </div>
+                  <span className={`status-badge ${statusLower}`}>
+                    {m.status || 'HEALTHY'}
+                  </span>
+                </div>
+
+                {/* Health Meter Progress Bar */}
+                <div className="health-meter-wrap">
+                  <div className="health-meter-head">
+                    <span>Health Score</span>
+                    <strong>{m.health_score || 0}%</strong>
+                  </div>
+                  <div className="health-meter-track">
+                    <div
+                      className={`health-meter-fill ${isCritical ? 'red' : isWarning ? 'amber' : 'green'}`}
+                      style={{ width: `${Math.min(100, Math.max(5, m.health_score || 0))}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Real-time Telemetry Grid */}
+                <div className="machine-telemetry-grid">
+                  <div className="telemetry-cell">
+                    <span className="telemetry-cell-label">Air / Proc Temp</span>
+                    <span className="telemetry-cell-val">
+                      {m.air_temperature ? `${m.air_temperature}°C / ${m.process_temperature}°C` : '24.5°C / 34.8°C'}
+                    </span>
+                  </div>
+                  <div className="telemetry-cell">
+                    <span className="telemetry-cell-label">Speed & Torque</span>
+                    <span className="telemetry-cell-val">
+                      {m.rpm || 1540} RPM · {m.torque || 42} Nm
+                    </span>
+                  </div>
+                  <div className="telemetry-cell">
+                    <span className="telemetry-cell-label">Failure Risk</span>
+                    <span className="telemetry-cell-val" style={{ color: isCritical ? 'var(--signal-red)' : isWarning ? 'var(--signal-amber)' : 'var(--signal-green)' }}>
+                      {failProbPct}% Risk
+                    </span>
+                  </div>
+                  <div className="telemetry-cell">
+                    <span className="telemetry-cell-label">Remaining RUL</span>
+                    <span className="telemetry-cell-val">
+                      {m.rul || 140} cycles
+                    </span>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    className="btn btn-sm btn-secondary"
+                    style={{ flex: 1 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/predict`);
+                    }}
+                  >
+                    AI Diagnostic
+                  </button>
+                  <button
+                    className="btn btn-sm btn-primary"
+                    style={{ flex: 1 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/machine/${m.machine_id}`);
+                    }}
+                  >
+                    Inspect <ArrowUpRight size={13} />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Critical Machines Alert */}
-      {(criticalCount + warningCount) > 0 && (
-        <div className="card">
+      {/* Critical Equipment Hazard Warning Drawer */}
+      {criticalCount > 0 && (
+        <div className="card" style={{ borderLeft: '4px solid var(--signal-red)' }}>
           <div className="card-header">
-            <span className="card-title">
-              <AlertTriangle size={14} style={{ marginRight: 6, color: 'var(--accent-red)' }} />
-              Machines Requiring Attention
+            <span className="card-title" style={{ color: 'var(--signal-red)' }}>
+              <ShieldAlert size={18} /> High-Risk Machine Incident Registry (Requires Immediate Overhaul)
             </span>
+            <button className="btn btn-sm btn-secondary" onClick={() => navigate('/maintenance')}>
+              Open Work Orders
+            </button>
           </div>
           <table className="data-table">
             <thead>
               <tr>
-                <th>Machine</th>
+                <th>Machine ID</th>
+                <th>Designation</th>
                 <th>Status</th>
                 <th>Health</th>
-                <th>Failure Risk</th>
-                <th>RUL</th>
-                <th>Action</th>
+                <th>AI Failure Prob</th>
+                <th>Forecasted RUL</th>
+                <th>Corrective Action</th>
               </tr>
             </thead>
             <tbody>
               {machines
-                .filter(m => ['CRITICAL', 'WARNING'].includes((m.status || '').toUpperCase()))
-                .slice(0, 8)
+                .filter(m => (m.status || '').toUpperCase() === 'CRITICAL')
                 .map(m => (
                   <tr key={m.machine_id}>
-                    <td className="mono-cell">{m.machine_id}</td>
-                    <td>
-                      <span className={`status-badge ${(m.status || '').toLowerCase()}`}>{m.status}</span>
+                    <td className="mono-cell" style={{ fontWeight: 700, color: 'var(--text-pure)' }}>
+                      {m.machine_id}
                     </td>
-                    <td className="mono-cell">{m.health_score}</td>
-                    <td className="mono-cell" style={{ color: m.failure_probability > 0.5 ? 'var(--accent-red)' : 'inherit' }}>
-                      {(m.failure_probability * 100).toFixed(1)}%
+                    <td>{m.name}</td>
+                    <td>
+                      <span className="status-badge critical">CRITICAL</span>
+                    </td>
+                    <td className="mono-cell" style={{ color: 'var(--signal-red)', fontWeight: 700 }}>
+                      {m.health_score}%
+                    </td>
+                    <td className="mono-cell" style={{ color: 'var(--signal-red)', fontWeight: 700 }}>
+                      {((m.failure_probability || 0) * 100).toFixed(1)}%
                     </td>
                     <td className="mono-cell">{m.rul} cycles</td>
                     <td>
-                      <button className="btn btn-sm btn-primary" onClick={() => navigate(`/machine/${m.machine_id}`)}>
-                        Inspect
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => navigate(`/machine/${m.machine_id}`)}
+                      >
+                        Inspect Telemetry
                       </button>
                     </td>
                   </tr>

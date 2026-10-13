@@ -23,10 +23,10 @@ export default function HeadsUpDisplay({ systemHealth, machines, activeMode, aud
     <header className="hud-header">
       {/* Brand & Mission Group */}
       <div className="hud-brand">
-        <div className="hud-logo-icon">M</div>
+        <div className="hud-logo-icon">GG</div>
         <div className="hud-title-group">
-          <div className="hud-title">MOTION <span>//</span> AI COCKPIT</div>
-          <div className="hud-subtitle">Autonomous Predictive Intelligence</div>
+          <div className="hud-title">GEARGUARD <span>//</span> AI COCKPIT</div>
+          <div className="hud-subtitle">Autonomous Sensor Analytics & Industrial Failure Prevention</div>
         </div>
       </div>
 

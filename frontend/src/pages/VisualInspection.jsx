@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { runVisualInspection } from '../services/api';
+import { runVisualInspection, getMachines } from '../services/api';
 import { Camera, Upload, Scan, Wrench, AlertTriangle, CheckCircle, RefreshCw } from 'lucide-react';
 
 const MACHINE_TYPES = [
@@ -11,6 +11,18 @@ const MACHINE_TYPES = [
 export default function VisualInspection() {
   const [machineType, setMachineType] = useState('CNC');
   const [machineId, setMachineId] = useState('M-101');
+  const [machines, setMachines] = useState([]);
+
+  useEffect(() => {
+    getMachines()
+      .then(res => {
+        if (res.data && res.data.length > 0) {
+          setMachines(res.data);
+          setMachineId(res.data[0].machine_id);
+        }
+      })
+      .catch(console.error);
+  }, []);
   const [mode, setMode] = useState('camera'); // camera | upload
   const [preview, setPreview] = useState(null);
   const [result, setResult] = useState(null);
@@ -168,9 +180,15 @@ export default function VisualInspection() {
             <div className="input-group" style={{ marginTop: 12, marginBottom: 12 }}>
               <span className="input-label">Machine ID</span>
               <select className="input-field" value={machineId} onChange={e => setMachineId(e.target.value)}>
-                {Array.from({ length: 24 }, (_, i) => `M-${101 + i}`).map(id => (
-                  <option key={id} value={id}>{id}</option>
-                ))}
+                {machines.length > 0 ? (
+                  machines.map(m => (
+                    <option key={m.machine_id} value={m.machine_id}>
+                      {m.machine_id} — {m.name || 'Registered Machine'}
+                    </option>
+                  ))
+                ) : (
+                  <option value="M-101">M-101</option>
+                )}
               </select>
             </div>
             <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: 16 }}>

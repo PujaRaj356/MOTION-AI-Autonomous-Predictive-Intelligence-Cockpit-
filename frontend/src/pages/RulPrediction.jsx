@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
-import { predictRUL } from '../services/api';
+import React, { useState, useEffect } from 'react';
+import { predictRUL, getMachines } from '../services/api';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Clock, TrendingDown, Play } from 'lucide-react';
 
 export default function RulPrediction() {
-  const [machineId, setMachineId] = useState('M-102');
+  const [machineId, setMachineId] = useState('M-101');
+  const [machines, setMachines] = useState([]);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getMachines()
+      .then(res => {
+        if (res.data && res.data.length > 0) {
+          setMachines(res.data);
+          setMachineId(res.data[0].machine_id);
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   const runRUL = async () => {
     setLoading(true);
@@ -32,12 +44,20 @@ export default function RulPrediction() {
 
       {/* Controls */}
       <div className="card" style={{ marginBottom: 24, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-        <div className="input-group" style={{ minWidth: 180 }}>
+        <div className="input-group" style={{ minWidth: 260 }}>
           <span className="input-label">Machine ID</span>
           <select className="input-field" value={machineId} onChange={e => setMachineId(e.target.value)}>
-            {['M-101', 'M-102', 'M-103', 'M-104', 'M-105'].map(id => (
-              <option key={id} value={id}>{id}</option>
-            ))}
+            {machines.length > 0 ? (
+              machines.map(m => (
+                <option key={m.machine_id} value={m.machine_id}>
+                  {m.machine_id} — {m.name || 'Machine'}
+                </option>
+              ))
+            ) : (
+              ['M-101', 'M-102', 'M-103', 'M-104', 'M-105'].map(id => (
+                <option key={id} value={id}>{id}</option>
+              ))
+            )}
           </select>
         </div>
         <button className="btn btn-primary btn-lg" onClick={runRUL} disabled={loading} style={{ marginTop: 18 }}>

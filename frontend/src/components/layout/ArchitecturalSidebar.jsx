@@ -23,8 +23,8 @@ export default function ArchitecturalSidebar({ systemHealth }) {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <h1>Predictive <span>AI</span></h1>
-        <div className="sidebar-brand-sub">Maintenance Intelligence</div>
+        <h1>Gear<span>Guard</span></h1>
+        <div className="sidebar-brand-sub">Autonomous Predictive Intelligence</div>
       </div>
 
       <nav className="sidebar-nav">
