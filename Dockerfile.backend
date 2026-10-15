@@ -2,20 +2,17 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Only install curl for Docker healthcheck (removes 7-minute build-essential compile overhead)
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
-# Install PyTorch CPU-only first to prevent CUDA bloat and keep container under 300MB RAM
+# Install PyTorch CPU-only first from PyTorch official CPU wheel index
 RUN pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
-# Install backend dependencies
-COPY backend/requirements.txt ./requirements.txt
+# Install remaining dependencies without torch to prevent PyPI from downloading 1.5GB of CUDA/NVIDIA packages
+COPY backend/requirements.docker.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend, ML models, dataset fallback, and scripts
+# Copy application files
 COPY backend/ ./backend/
 COPY ml/ ./ml/
 COPY data/ ./data/
