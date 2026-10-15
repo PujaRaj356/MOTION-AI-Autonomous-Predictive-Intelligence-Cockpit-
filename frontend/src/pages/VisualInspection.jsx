@@ -114,6 +114,24 @@ export default function VisualInspection() {
     reader.readAsDataURL(file);
   };
 
+  const loadPresetImage = async (url) => {
+    try {
+      stopCamera();
+      setError(null);
+      setResult(null);
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(blob);
+    } catch (err) {
+      console.error('Failed to load preset image:', err);
+      setError('Failed to load preset sample image.');
+    }
+  };
+
   const runInspection = async () => {
     if (!preview) {
       setError('Capture or upload an image first.');
@@ -251,9 +269,44 @@ export default function VisualInspection() {
                   )}
                 </div>
                 <label className="btn btn-secondary" style={{ marginTop: 12, width: '100%', cursor: 'pointer' }}>
-                  <Upload size={14} /> Select Image
+                  <Upload size={14} /> Select Image From Disk
                   <input type="file" accept="image/*" onChange={handleUpload} style={{ display: 'none' }} />
                 </label>
+
+                <div style={{ marginTop: 14 }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Or Test With Factory Presets:
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-sm"
+                      style={{ fontSize: '0.72rem', padding: '6px 4px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}
+                      onClick={() => loadPresetImage('/sample_images/00_pristine_new_carbide_insert.jpg')}
+                    >
+                      <span style={{ color: 'var(--accent-sage)', fontWeight: 700 }}>● GOOD</span>
+                      <span>Pristine Tip</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-sm"
+                      style={{ fontSize: '0.72rem', padding: '6px 4px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}
+                      onClick={() => loadPresetImage('/sample_images/01_worn_carbide_tool.jpg')}
+                    >
+                      <span style={{ color: 'var(--accent-amber)', fontWeight: 700 }}>● WORN</span>
+                      <span>Flank Wear</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-sm"
+                      style={{ fontSize: '0.72rem', padding: '6px 4px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}
+                      onClick={() => loadPresetImage('/sample_images/03_severely_chipped_end_mill.jpg')}
+                    >
+                      <span style={{ color: 'var(--accent-red)', fontWeight: 700 }}>● CHIPPED</span>
+                      <span>Fractured Mill</span>
+                    </button>
+                  </div>
+                </div>
               </>
             )}
 

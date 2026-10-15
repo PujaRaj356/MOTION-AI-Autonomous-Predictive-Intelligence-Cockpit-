@@ -94,9 +94,9 @@ class VisualInspectionService:
 
     CNC_THRESHOLDS = {
         "edge_density_warning": 0.08,
-        "edge_density_severe": 0.14,
-        "dark_ratio_warning": 0.25,
-        "dark_ratio_severe": 0.40,
+        "edge_density_severe": 0.13,
+        "dark_ratio_warning": 0.10,
+        "dark_ratio_severe": 0.20,
     }
 
     def analyze_image(self, image_base64: str, machine_type: str, machine_id: str) -> dict:
@@ -163,14 +163,21 @@ class VisualInspectionService:
 
     def _compute_metrics(self, img: Image.Image) -> dict:
         gray = img.convert("L")
-        edges = gray.filter(ImageFilter.FIND_EDGES)
-        edge_arr = np.array(edges, dtype=float) / 255.0
-        edge_density = float(np.mean(edge_arr > 0.15))
+        w, h = gray.size
+        # Focus on center 75% where cutting tool insert/component is positioned
+        pad_w, pad_h = int(w * 0.12), int(h * 0.12)
+        roi = gray.crop((pad_w, pad_h, w - pad_w, h - pad_h))
 
-        arr = np.array(gray, dtype=float) / 255.0
-        dark_ratio = float(np.mean(arr < 0.35))
+        edges = roi.filter(ImageFilter.FIND_EDGES)
+        edge_arr = np.array(edges, dtype=float) / 255.0
+        # True fracture / jagged micro-crack edges (excluding smooth lighting gradients)
+        edge_density = float(np.mean(edge_arr > 0.20))
+
+        arr = np.array(roi, dtype=float) / 255.0
+        # True crater degradation and thermal scorch burns (excluding ambient steel gray)
+        dark_ratio = float(np.mean(arr < 0.22))
         brightness = float(np.mean(arr))
-        contrast = float(ImageStat.Stat(gray).stddev[0]) / 128.0
+        contrast = float(ImageStat.Stat(roi).stddev[0]) / 128.0
 
         return {
             "edge_density": round(edge_density, 4),
@@ -193,7 +200,7 @@ class VisualInspectionService:
 
         if metrics["dark_ratio"] > t["dark_ratio_severe"]:
             issues.append("Tip degradation — dark worn regions detected")
-            severity_score += 0.35
+            severity_score += 0.40
         elif metrics["dark_ratio"] > t["dark_ratio_warning"]:
             issues.append("Possible tip degradation")
             severity_score += 0.20
@@ -202,10 +209,10 @@ class VisualInspectionService:
             issues.append("Surface damage — high contrast anomalies")
             severity_score += 0.20
 
-        if severity_score >= 0.65:
+        if severity_score >= 0.60:
             condition = "SEVERE WEAR"
             recommendation = "Inspect and replace cutting tool immediately. Severe visual wear indicators detected."
-        elif severity_score >= 0.30:
+        elif severity_score >= 0.25:
             condition = "WARNING"
             recommendation = "Schedule tool inspection. Moderate wear indicators detected — monitor closely."
         else:

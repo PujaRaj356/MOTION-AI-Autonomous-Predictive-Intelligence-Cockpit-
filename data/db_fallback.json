@@ -13,7 +13,7 @@
       "rpm": 1474.9,
       "torque": 48.2,
       "tool_wear": 58.7,
-      "last_updated": "2026-10-13T22:09:01.752760"
+      "last_updated": "2026-10-15T14:51:10.477098"
     },
     {
       "machine_id": "M-102",
@@ -2976,6 +2976,61 @@
       ],
       "ai_summary": "Torque and Tool Wear are the primary factors increasing the predicted failure risk.",
       "timestamp": "2026-10-13 22:10:37"
+    },
+    {
+      "machine_id": "M-101",
+      "failure_probability": 0.0037,
+      "failure_percentage": 0.4,
+      "risk_level": "HEALTHY",
+      "health_score": 91,
+      "rul_estimate": 152,
+      "recommendation": "Machine is operating within a healthy range. Continue baseline automated monitoring.",
+      "shap_explanation": [
+        {
+          "feature": "Tool Wear",
+          "value": 58.7,
+          "shap_value": -1.5226,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Air Temperature",
+          "value": 22.79,
+          "shap_value": -1.4112,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Process Temperature",
+          "value": 48.0,
+          "shap_value": -0.8627,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Torque",
+          "value": 48.2,
+          "shap_value": -0.8455,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Rotational Speed",
+          "value": 1474.9,
+          "shap_value": -0.6557,
+          "impact": "high",
+          "direction": "decreases"
+        },
+        {
+          "feature": "Machine Type",
+          "value": 2.0,
+          "shap_value": -0.2856,
+          "impact": "medium",
+          "direction": "decreases"
+        }
+      ],
+      "ai_summary": "Machine operating parameters like Tool Wear and Air Temperature are keeping failure risk low.",
+      "timestamp": "2026-10-15 14:51:10"
     }
   ],
   "scenarios": [
@@ -3862,6 +3917,194 @@
         "risk_level": "HEALTHY"
       },
       "timestamp": "2026-09-16 12:22:30"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "SEVERE WEAR",
+      "confidence": 95,
+      "detected_issues": [
+        "Edge wear \u2014 high surface irregularity detected",
+        "Tip degradation \u2014 dark worn regions detected"
+      ],
+      "recommendation": "Inspect and replace cutting tool immediately. Severe visual wear indicators detected.",
+      "image_metrics": {
+        "edge_density": 0.1783,
+        "dark_ratio": 0.5076,
+        "brightness": 0.365,
+        "contrast": 0.464
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 61,
+        "sensor_failure_pct": 0.4,
+        "visual_penalty": 30,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-10-15 15:11:26"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "SEVERE WEAR",
+      "confidence": 95,
+      "detected_issues": [
+        "Edge wear \u2014 high surface irregularity detected",
+        "Tip degradation \u2014 dark worn regions detected"
+      ],
+      "recommendation": "Inspect and replace cutting tool immediately. Severe visual wear indicators detected.",
+      "image_metrics": {
+        "edge_density": 0.2358,
+        "dark_ratio": 0.4337,
+        "brightness": 0.4181,
+        "contrast": 0.4856
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 61,
+        "sensor_failure_pct": 0.4,
+        "visual_penalty": 30,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-10-15 15:11:55"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "GOOD",
+      "confidence": 73,
+      "detected_issues": [
+        "No significant visual defects detected"
+      ],
+      "recommendation": "Cutting tool appears within acceptable visual condition. Continue normal monitoring.",
+      "image_metrics": {
+        "edge_density": 0.0357,
+        "dark_ratio": 0.0312,
+        "brightness": 0.5843,
+        "contrast": 0.1696
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 91,
+        "sensor_failure_pct": 0.4,
+        "visual_penalty": 0,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-10-15 15:13:20"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "SEVERE WEAR",
+      "confidence": 95,
+      "detected_issues": [
+        "Edge wear \u2014 high surface irregularity detected",
+        "Tip degradation \u2014 dark worn regions detected"
+      ],
+      "recommendation": "Inspect and replace cutting tool immediately. Severe visual wear indicators detected.",
+      "image_metrics": {
+        "edge_density": 0.2064,
+        "dark_ratio": 0.667,
+        "brightness": 0.2767,
+        "contrast": 0.4471
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 61,
+        "sensor_failure_pct": 0.4,
+        "visual_penalty": 30,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-10-15 15:13:39"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "SEVERE WEAR",
+      "confidence": 95,
+      "detected_issues": [
+        "Edge wear \u2014 high surface irregularity detected",
+        "Tip degradation \u2014 dark worn regions detected",
+        "Surface damage \u2014 high contrast anomalies"
+      ],
+      "recommendation": "Inspect and replace cutting tool immediately. Severe visual wear indicators detected.",
+      "image_metrics": {
+        "edge_density": 0.169,
+        "dark_ratio": 0.4344,
+        "brightness": 0.4686,
+        "contrast": 0.5898
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 61,
+        "sensor_failure_pct": 0.4,
+        "visual_penalty": 30,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-10-15 15:26:45"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "GOOD",
+      "confidence": 74,
+      "detected_issues": [
+        "No significant visual defects detected"
+      ],
+      "recommendation": "Cutting tool appears within acceptable visual condition. Continue normal monitoring.",
+      "image_metrics": {
+        "edge_density": 0.046,
+        "dark_ratio": 0.0058,
+        "brightness": 0.5781,
+        "contrast": 0.2202
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 91,
+        "sensor_failure_pct": 0.4,
+        "visual_penalty": 0,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-10-15 15:34:53"
+    },
+    {
+      "machine_id": "M-101",
+      "machine_type": "CNC",
+      "inspection_type": "CNC",
+      "component": "Cutting Tool",
+      "condition": "SEVERE WEAR",
+      "confidence": 95,
+      "detected_issues": [
+        "Edge wear \u2014 high surface irregularity detected",
+        "Tip degradation \u2014 dark worn regions detected"
+      ],
+      "recommendation": "Inspect and replace cutting tool immediately. Severe visual wear indicators detected.",
+      "image_metrics": {
+        "edge_density": 0.1506,
+        "dark_ratio": 0.3239,
+        "brightness": 0.3629,
+        "contrast": 0.4548
+      },
+      "model_mode": "HEURISTIC_DEV",
+      "combined_health": {
+        "health_score": 61,
+        "sensor_failure_pct": 0.4,
+        "visual_penalty": 30,
+        "risk_level": "HEALTHY"
+      },
+      "timestamp": "2026-10-15 15:34:55"
     }
   ]
 }

@@ -58,7 +58,35 @@ flowchart TD
 
 ## Developer Setup Guide
 
-### 1. Backend (FastAPI)
+### 🐳 Run with Docker (Recommended)
+You can launch the entire stack (FastAPI Backend, React Frontend, and MongoDB) in one command:
+
+```bash
+docker compose up --build
+```
+Or double-click `run_docker.bat` (or execute `.\run_docker.ps1`).
+
+Once started, the services will be available at:
+- **Cockpit Dashboard**: [http://localhost:5173](http://localhost:5173)
+- **FastAPI API & Health**: [http://localhost:8000/health](http://localhost:8000/health)
+- **Swagger Interactive Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **MongoDB**: `localhost:27017`
+
+To run with the real-time autonomous telemetry streamer enabled:
+```bash
+docker compose --profile live up --build
+```
+
+To stop all containers:
+```bash
+docker compose down
+```
+
+---
+
+### Local Development Setup (Without Docker)
+
+#### 1. Backend (FastAPI)
 ```bash
 # Activate the virtual environment
 backend\.venv\Scripts\Activate.ps1
@@ -70,17 +98,18 @@ pip install -r backend/requirements.txt
 python -m backend.app.main
 ```
 
-### 2. Frontend (React Dashboard)
+#### 2. Frontend (React Dashboard)
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-### 3. Machine Learning (Jupyter)
+#### 3. Machine Learning (Jupyter)
 To view the Exploratory Data Analysis (EDA) and Model Training pipeline:
 ```bash
 # Ensure virtual environment is active
 jupyter lab
 # Open ml/notebooks/01_EDA_and_Modeling.ipynb
 ```
+
