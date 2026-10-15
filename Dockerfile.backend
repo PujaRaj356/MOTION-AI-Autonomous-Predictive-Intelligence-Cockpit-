@@ -1,0 +1,31 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PyTorch CPU-only first to prevent CUDA bloat and keep container under 300MB RAM
+RUN pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+# Install backend dependencies
+COPY backend/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy backend, ML models, dataset fallback, and scripts
+COPY backend/ ./backend/
+COPY ml/ ./ml/
+COPY data/ ./data/
+COPY scripts/ ./scripts/
+
+ENV PORT=8000
+ENV OMP_NUM_THREADS=1
+ENV MKL_NUM_THREADS=1
+ENV WEB_CONCURRENCY=1
+
+EXPOSE 8000
+
+CMD ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

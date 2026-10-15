@@ -1,0 +1,52 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: gearguard-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - OMP_NUM_THREADS=1
+      - MKL_NUM_THREADS=1
+      - WEB_CONCURRENCY=1
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8000
+    container_name: gearguard-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Optional real-time autonomous telemetry streamer daemon
+  streamer:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: gearguard-streamer
+    command: python scripts/live_telemetry_streamer.py
+    environment:
+      - API_URL=http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    profiles:
+      - live

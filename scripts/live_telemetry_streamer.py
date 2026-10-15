@@ -4,8 +4,9 @@ import json
 import urllib.request
 import urllib.error
 import sys
+import os
 
-API_URL = "http://localhost:8000"
+API_URL = os.environ.get("API_URL", "http://localhost:8000")
 
 def get_machines():
     try:
