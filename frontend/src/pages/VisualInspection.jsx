@@ -32,6 +32,22 @@ const MACHINE_TYPES = [
   },
 ];
 
+const FACTORY_PRESETS = {
+  CNC: [
+    { label: 'NOMINAL', title: 'Pristine Tip', color: 'var(--accent-sage)', url: '/sample_images/00_pristine_new_carbide_insert.jpg' },
+    { label: 'MODERATE', title: 'Flank Wear', color: 'var(--accent-amber)', url: '/sample_images/01_worn_carbide_tool.jpg' },
+    { label: 'CRITICAL', title: 'Fractured Mill', color: 'var(--accent-red)', url: '/sample_images/03_severely_chipped_end_mill.jpg' }
+  ],
+  CONVEYOR: [
+    { label: 'NOMINAL', title: 'Clean Belt', color: 'var(--accent-sage)', url: '/sample_images/10_healthy_conveyor_belt.jpg' },
+    { label: 'CRITICAL', title: 'Deep Surface Tear', color: 'var(--accent-red)', url: '/sample_images/11_damaged_conveyor_tear.jpg' }
+  ],
+  HYDRAULIC: [
+    { label: 'NOMINAL', title: 'Dry Assembly', color: 'var(--accent-sage)', url: '/sample_images/20_healthy_hydraulic_system.jpg' },
+    { label: 'CRITICAL', title: 'Active Oil Leak', color: 'var(--accent-red)', url: '/sample_images/21_leaking_hydraulic_assembly.jpg' }
+  ]
+};
+
 export default function VisualInspection() {
   const [machineType, setMachineType] = useState('CNC');
   const [machineId, setMachineId] = useState('M-101');
@@ -337,34 +353,19 @@ export default function VisualInspection() {
                   <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                     Calibrated Industrial Test Presets ({machineType}):
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
-                    <button
-                      type="button"
-                      className="btn btn-secondary btn-sm"
-                      style={{ fontSize: '0.72rem', padding: '8px 4px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}
-                      onClick={() => loadPresetImage('/sample_images/00_pristine_new_carbide_insert.jpg')}
-                    >
-                      <span style={{ color: 'var(--accent-sage)', fontWeight: 700 }}>✓ NOMINAL</span>
-                      <span>Pristine Component</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-secondary btn-sm"
-                      style={{ fontSize: '0.72rem', padding: '8px 4px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}
-                      onClick={() => loadPresetImage('/sample_images/01_worn_carbide_tool.jpg')}
-                    >
-                      <span style={{ color: 'var(--accent-amber)', fontWeight: 700 }}>⚠ MODERATE</span>
-                      <span>Flank / Surface Wear</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-secondary btn-sm"
-                      style={{ fontSize: '0.72rem', padding: '8px 4px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}
-                      onClick={() => loadPresetImage('/sample_images/03_severely_chipped_end_mill.jpg')}
-                    >
-                      <span style={{ color: 'var(--accent-red)', fontWeight: 700 }}>🚨 CRITICAL</span>
-                      <span>Fracture / Chipping</span>
-                    </button>
+                                    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${(FACTORY_PRESETS[machineType] || []).length}, 1fr)`, gap: 6 }}>
+                    {(FACTORY_PRESETS[machineType] || []).map((preset, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        className="btn btn-secondary btn-sm"
+                        style={{ fontSize: '0.72rem', padding: '8px 4px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}
+                        onClick={() => loadPresetImage(preset.url)}
+                      >
+                        <span style={{ color: preset.color, fontWeight: 700 }}>{preset.label}</span>
+                        <span>{preset.title}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
               </>

@@ -233,26 +233,23 @@ class VisualInspectionService:
         issues = []
         severity_score = 0.0
 
-        if metrics["edge_density"] > 0.12:
-            issues.append("Belt damage — surface cracks/tears detected")
-            severity_score += 0.40
-        elif metrics["edge_density"] > 0.08:
-            issues.append("Moderate surface wear on belt")
-            severity_score += 0.20
-
-        if metrics["contrast"] > 0.60:
-            issues.append("Belt misalignment detected")
-            severity_score += 0.35
-        elif metrics["contrast"] > 0.45:
-            issues.append("Possible belt misalignment")
+        if metrics["edge_density"] > 0.145:
+            issues.append("Severe belt tear — deep structural tear/fracture detected")
+            severity_score += 0.45
+        elif metrics["edge_density"] > 0.11:
+            issues.append("Surface tread wear — regular operational friction")
             severity_score += 0.15
 
-        if severity_score >= 0.50:
+        if metrics["contrast"] > 0.55 and metrics["dark_ratio"] > 0.40:
+            issues.append("Belt tracking misalignment & uneven wear groove")
+            severity_score += 0.35
+
+        if severity_score >= 0.40:
             condition = "WARNING"
-            recommendation = "Inspect belt alignment and check for severe cracks."
-        elif severity_score >= 0.20:
+            recommendation = "Inspect belt alignment and check for severe cracks or structural tearing."
+        elif severity_score >= 0.15:
             condition = "MODERATE WEAR"
-            recommendation = "Schedule conveyor maintenance check soon."
+            recommendation = "Schedule conveyor maintenance check soon. Monitor belt surface."
         else:
             condition = "GOOD"
             recommendation = "Conveyor belt appears within acceptable visual condition."
@@ -271,28 +268,28 @@ class VisualInspectionService:
         issues = []
         severity_score = 0.0
 
-        if metrics["dark_ratio"] > 0.35:
-            issues.append("Oil Leakage — dark fluid patches detected")
+        if metrics["dark_ratio"] > 0.36:
+            issues.append("Oil Leakage — dark fluid pooling and wet residue detected")
             severity_score += 0.60
-        elif metrics["dark_ratio"] > 0.25:
-            issues.append("Possible Oil Leakage or dark spotting")
+        elif metrics["dark_ratio"] > 0.28 and metrics["brightness"] < 0.38:
+            issues.append("Minor oil seepage or surface dark spotting")
             severity_score += 0.30
 
-        if metrics["edge_density"] > 0.15:
-            issues.append("Hose damage — irregular shapes on hose assembly")
+        if metrics["edge_density"] > 0.16:
+            issues.append("Hose surface wear — exterior braid distortion or swelling")
             severity_score += 0.25
 
         if severity_score >= 0.55:
             condition = "CRITICAL"
-            recommendation = "Immediate inspection required. High probability of hydraulic fluid leakage."
+            recommendation = "Immediate maintenance required. High probability of active hydraulic fluid leakage."
         elif severity_score >= 0.25:
             condition = "WARNING"
-            recommendation = "Check hydraulic lines for minor leaks or damage."
+            recommendation = "Inspect hydraulic fittings and seals for minor seepage or line wear."
         else:
             condition = "GOOD"
-            recommendation = "Hydraulic assembly shows no visible signs of leakage."
+            recommendation = "Hydraulic assembly shows no visible signs of fluid leakage or damage."
 
-        confidence = min(94, int(70 + severity_score * 30 + metrics["dark_ratio"] * 30))
+        confidence = min(95, int(72 + severity_score * 30 + metrics["dark_ratio"] * 30))
 
         return {
             "condition": condition,
@@ -310,7 +307,7 @@ class VisualInspectionService:
         sensor_rul = machine.get("rul", 120) if machine else 120
         base_health = HealthEngine.calculate_health_score(sensor_prob, sensor_rul)
 
-        visual_penalty = {"GOOD": 0, "WARNING": 15, "SEVERE WEAR": 30}.get(assessment["condition"], 0)
+        visual_penalty = {"GOOD": 0, "MODERATE WEAR": 10, "WARNING": 20, "SEVERE WEAR": 35, "CRITICAL": 45}.get(assessment["condition"], 0)
         combined_health = max(0, base_health - visual_penalty)
 
         return {
