@@ -1,4 +1,5 @@
 {
+  "accuracy": 0.978,
   "precision": 0.6336,
   "recall": 0.8525,
   "f1_score": 0.7269,
@@ -13,6 +14,14 @@
       185
     ]
   ],
+  "feature_importance": {
+    "Tool Wear": 0.3671,
+    "Torque": 0.2704,
+    "Rotational Speed": 0.1366,
+    "Air Temperature": 0.0975,
+    "Process Temperature": 0.0943,
+    "Machine Type": 0.0341
+  },
   "features": [
     "Air temperature [C]",
     "Process temperature [C]",

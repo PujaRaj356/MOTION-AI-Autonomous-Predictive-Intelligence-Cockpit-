@@ -1052,3 +1052,141 @@ input[type="text"].input-field {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* ==========================================================================
+   Model Benchmark Lab - Confusion Matrix & Evaluation Components
+   ========================================================================== */
+.confusion-matrix-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px;
+  margin: 10px auto 0;
+}
+
+.confusion-matrix-grid {
+  display: grid;
+  grid-template-columns: 85px 1fr 1fr;
+  grid-template-rows: auto 1fr 1fr;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.cm-axis-header {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4px 6px;
+}
+
+.confusion-matrix {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 440px;
+}
+
+.cm-cell {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+.cm-cell:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-medium);
+}
+
+.cm-cell.tn {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.16), rgba(15, 23, 42, 0.85) 75%);
+}
+
+.cm-cell.tn .cm-value {
+  color: #34d399;
+  text-shadow: 0 0 16px rgba(16, 185, 129, 0.45);
+}
+
+.cm-cell.fp {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.14), rgba(15, 23, 42, 0.85) 75%);
+}
+
+.cm-cell.fp .cm-value {
+  color: #fbbf24;
+  text-shadow: 0 0 16px rgba(245, 158, 11, 0.4);
+}
+
+.cm-cell.fn {
+  border-color: rgba(244, 63, 94, 0.4);
+  background: radial-gradient(circle at 50% 0%, rgba(244, 63, 94, 0.16), rgba(15, 23, 42, 0.85) 75%);
+}
+
+.cm-cell.fn .cm-value {
+  color: #f43f5e;
+  text-shadow: 0 0 16px rgba(244, 63, 94, 0.45);
+}
+
+.cm-cell.tp {
+  border-color: rgba(0, 242, 254, 0.4);
+  background: radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.16), rgba(15, 23, 42, 0.85) 75%);
+}
+
+.cm-cell.tp .cm-value {
+  color: #00f2fe;
+  text-shadow: 0 0 16px rgba(0, 242, 254, 0.5);
+}
+
+.cm-value {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cm-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-high);
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cm-subtext {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  margin-top: 3px;
+}
+
+.cm-footer-legend {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-mid);
+}

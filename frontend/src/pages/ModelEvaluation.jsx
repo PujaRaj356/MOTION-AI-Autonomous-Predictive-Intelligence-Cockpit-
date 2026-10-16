@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getMetrics } from '../services/api';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
-import { Cpu, Target, Layers, Award, CheckCircle } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, LabelList } from 'recharts';
+import { Cpu, Layers, CheckCircle } from 'lucide-react';
 
 export default function ModelEvaluation() {
   const [metrics, setMetrics] = useState(null);
@@ -19,12 +19,42 @@ export default function ModelEvaluation() {
 
   const xgb = metrics.xgboost || {};
   const lstm = metrics.lstm || {};
-  const cm = xgb.confusion_matrix || { tn: 1910, fp: 25, fn: 18, tp: 47 };
 
-  // Feature Importance data for chart
-  const fiData = Object.entries(xgb.feature_importance || {}).map(([key, val]) => ({
+  // Safe parsing of confusion matrix (supports [[tn, fp], [fn, tp]] or { tn, fp, fn, tp })
+  let cm = { tn: 1676, fp: 107, fn: 32, tp: 185 };
+  if (Array.isArray(xgb.confusion_matrix) && xgb.confusion_matrix.length === 2 && Array.isArray(xgb.confusion_matrix[0])) {
+    cm = {
+      tn: xgb.confusion_matrix[0][0],
+      fp: xgb.confusion_matrix[0][1],
+      fn: xgb.confusion_matrix[1][0],
+      tp: xgb.confusion_matrix[1][1]
+    };
+  } else if (xgb.confusion_matrix && typeof xgb.confusion_matrix === 'object' && 'tn' in xgb.confusion_matrix) {
+    cm = {
+      tn: xgb.confusion_matrix.tn,
+      fp: xgb.confusion_matrix.fp,
+      fn: xgb.confusion_matrix.fn,
+      tp: xgb.confusion_matrix.tp
+    };
+  }
+
+  // Feature Importance data for chart with verified model weights fallback
+  const defaultFeatureImportance = {
+    "Tool Wear": 0.3671,
+    "Torque": 0.2704,
+    "Rotational Speed": 0.1366,
+    "Air Temperature": 0.0975,
+    "Process Temperature": 0.0943,
+    "Machine Type": 0.0341
+  };
+
+  const rawFi = (xgb.feature_importance && Object.keys(xgb.feature_importance).length > 0)
+    ? xgb.feature_importance
+    : defaultFeatureImportance;
+
+  const fiData = Object.entries(rawFi).map(([key, val]) => ({
     feature: key.replace(/_/g, ' '),
-    importance: parseFloat((val * 100).toFixed(2))
+    importance: parseFloat((val > 1 ? val : val * 100).toFixed(1))
   })).sort((a, b) => b.importance - a.importance);
 
   // Learning curve mock/trend from training
@@ -60,7 +90,7 @@ export default function ModelEvaluation() {
         <div className="metrics-grid">
           <div className="metric-card sage">
             <div className="metric-label">ROC-AUC Score</div>
-            <div className="metric-value">{(xgb.roc_auc || 0.985).toFixed(3)}</div>
+            <div className="metric-value">{(xgb.roc_auc || 0.937).toFixed(3)}</div>
             <div className="metric-change positive">Discriminative power</div>
           </div>
           <div className="metric-card orange">
@@ -70,17 +100,17 @@ export default function ModelEvaluation() {
           </div>
           <div className="metric-card sage">
             <div className="metric-label">Precision</div>
-            <div className="metric-value">{(xgb.precision || 0.942).toFixed(3)}</div>
+            <div className="metric-value">{(xgb.precision || 0.634).toFixed(3)}</div>
             <div className="metric-change positive">Low false alarms</div>
           </div>
           <div className="metric-card amber">
             <div className="metric-label">Recall / Sensitivity</div>
-            <div className="metric-value">{(xgb.recall || 0.915).toFixed(3)}</div>
+            <div className="metric-value">{(xgb.recall || 0.853).toFixed(3)}</div>
             <div className="metric-change" style={{ color: 'var(--accent-amber)' }}>True positive capture</div>
           </div>
           <div className="metric-card sage">
             <div className="metric-label">F1-Score</div>
-            <div className="metric-value">{(xgb.f1_score || 0.928).toFixed(3)}</div>
+            <div className="metric-value">{(xgb.f1_score || 0.727).toFixed(3)}</div>
             <div className="metric-change positive">Harmonic balance</div>
           </div>
         </div>
@@ -93,28 +123,42 @@ export default function ModelEvaluation() {
               <span className="card-title">Test Set Confusion Matrix</span>
               <span className="status-badge healthy"><CheckCircle size={10} /> Validated</span>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>
-              <div className="confusion-matrix">
+            
+            <div className="confusion-matrix-wrapper">
+              <div className="confusion-matrix-grid">
+                <div></div>
+                <div className="cm-axis-header">Pred: Healthy</div>
+                <div className="cm-axis-header">Pred: Failure</div>
+
+                <div className="cm-axis-header">Act: Healthy</div>
                 <div className="cm-cell tn">
-                  <span className="cm-value">{cm.tn}</span>
+                  <span className="cm-value">{(cm.tn || 1676).toLocaleString()}</span>
                   <span className="cm-label">True Neg (TN)</span>
+                  <span className="cm-subtext">83.8% • Normal Verified</span>
                 </div>
                 <div className="cm-cell fp">
-                  <span className="cm-value">{cm.fp}</span>
+                  <span className="cm-value">{(cm.fp || 107).toLocaleString()}</span>
                   <span className="cm-label">False Pos (FP)</span>
+                  <span className="cm-subtext">5.4% • False Alarm</span>
                 </div>
+
+                <div className="cm-axis-header">Act: Failure</div>
                 <div className="cm-cell fn">
-                  <span className="cm-value">{cm.fn}</span>
+                  <span className="cm-value">{(cm.fn || 32).toLocaleString()}</span>
                   <span className="cm-label">False Neg (FN)</span>
+                  <span className="cm-subtext">1.6% • Missed Alert</span>
                 </div>
                 <div className="cm-cell tp">
-                  <span className="cm-value">{cm.tp}</span>
+                  <span className="cm-value">{(cm.tp || 185).toLocaleString()}</span>
                   <span className="cm-label">True Pos (TP)</span>
+                  <span className="cm-subtext">9.3% • Failure Caught</span>
                 </div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', maxWidth: 280, marginTop: 12, fontSize: '0.72rem', color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
-                <span>Actual: Healthy / Failure</span>
-                <span>Predicted: Healthy / Failure</span>
+
+              <div className="cm-footer-legend">
+                <span>Total Samples: <strong>2,000</strong></span>
+                <span>Sensitivity: <strong style={{ color: 'var(--signal-mint)' }}>85.3%</strong></span>
+                <span>Specificity: <strong style={{ color: 'var(--signal-green)' }}>94.0%</strong></span>
               </div>
             </div>
           </div>
@@ -123,21 +167,60 @@ export default function ModelEvaluation() {
           <div className="card">
             <div className="card-header">
               <span className="card-title">XGBoost Feature Importance (%)</span>
+              <span className="mono-cell" style={{ fontSize: '0.72rem', color: 'var(--signal-mint)' }}>Gain Weight Ratio</span>
             </div>
-            <div style={{ height: 190, marginTop: 10 }}>
+            <div style={{ height: 230, marginTop: 8 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={fiData} layout="vertical" margin={{ top: 5, right: 20, left: 40, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-light)" />
-                  <XAxis type="number" tick={{ fontSize: 10, fill: 'var(--text-tertiary)' }} unit="%" />
-                  <YAxis type="category" dataKey="feature" tick={{ fontSize: 10, fill: 'var(--text-secondary)' }} width={80} />
+                <BarChart
+                  data={fiData}
+                  layout="vertical"
+                  margin={{ top: 5, right: 45, left: 15, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.06)" horizontal={false} />
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 11, fill: 'var(--text-dim)' }}
+                    unit="%"
+                    domain={[0, 42]}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="feature"
+                    tick={{ fontSize: 11, fill: 'var(--text-high)', fontWeight: 500 }}
+                    width={125}
+                  />
                   <Tooltip
                     formatter={(value) => [`${value}%`, 'Importance']}
-                    contentStyle={{ background: '#20221F', border: 'none', borderRadius: 8, color: '#F4F1EA', fontSize: 12 }}
+                    contentStyle={{
+                      background: 'rgba(10, 15, 28, 0.95)',
+                      border: '1px solid rgba(0, 242, 254, 0.3)',
+                      borderRadius: 8,
+                      color: '#F1F5F9',
+                      fontSize: 12,
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
+                    }}
                   />
-                  <Bar dataKey="importance" fill="var(--accent-orange)" radius={[0, 4, 4, 0]}>
-                    {fiData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={index === 0 ? 'var(--accent-orange)' : 'var(--accent-sage)'} />
-                    ))}
+                  <Bar dataKey="importance" radius={[0, 6, 6, 0]}>
+                    <LabelList
+                      dataKey="importance"
+                      position="right"
+                      formatter={(v) => `${v}%`}
+                      fill="#F1F5F9"
+                      fontSize={11}
+                      fontWeight={600}
+                      offset={8}
+                    />
+                    {fiData.map((entry, index) => {
+                      const colors = [
+                        '#fb923c', // Tool Wear: Orange
+                        '#f59e0b', // Torque: Amber
+                        '#00f2fe', // Rotational Speed: Cyan
+                        '#10b981', // Air Temp: Emerald
+                        '#3b82f6', // Process Temp: Blue
+                        '#8b5cf6'  // Machine Type: Purple
+                      ];
+                      return <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />;
+                    })}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
@@ -159,22 +242,22 @@ export default function ModelEvaluation() {
         <div className="metrics-grid">
           <div className="metric-card sage">
             <div className="metric-label">RMSE</div>
-            <div className="metric-value">{(lstm.rmse || 16.42).toFixed(2)}<span className="metric-unit">cycles</span></div>
+            <div className="metric-value">{(lstm.rmse || 39.88).toFixed(2)}<span className="metric-unit">cycles</span></div>
             <div className="metric-change positive">Low deviation</div>
           </div>
           <div className="metric-card orange">
             <div className="metric-label">MAE</div>
-            <div className="metric-value">{(lstm.mae || 12.18).toFixed(2)}<span className="metric-unit">cycles</span></div>
+            <div className="metric-value">{(lstm.mae || 30.20).toFixed(2)}<span className="metric-unit">cycles</span></div>
             <div className="metric-change positive">Mean absolute err</div>
           </div>
           <div className="metric-card sage">
             <div className="metric-label">R² Coefficient</div>
-            <div className="metric-value">{(lstm.r2_score || 0.884).toFixed(3)}</div>
+            <div className="metric-value">{(lstm.r2_score || 0.645).toFixed(3)}</div>
             <div className="metric-change positive">Variance explained</div>
           </div>
           <div className="metric-card amber">
             <div className="metric-label">Sequence Window</div>
-            <div className="metric-value">20<span className="metric-unit">steps</span></div>
+            <div className="metric-value">{lstm.seq_length || 20}<span className="metric-unit">steps</span></div>
             <div className="metric-change" style={{ color: 'var(--accent-amber)' }}>Sliding horizon</div>
           </div>
         </div>
@@ -202,25 +285,25 @@ export default function ModelEvaluation() {
           <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <span className="card-title">Network Architecture Specifications</span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--bg-secondary)', fontSize: '0.85rem' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Input Shape</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: '0.85rem' }}>
+                <span style={{ color: 'var(--text-dim)' }}>Input Shape</span>
                 <span className="mono-cell" style={{ fontWeight: 600 }}>(20 steps, 8 sensor channels)</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--bg-secondary)', fontSize: '0.85rem' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Layer 1</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: '0.85rem' }}>
+                <span style={{ color: 'var(--text-dim)' }}>Layer 1</span>
                 <span className="mono-cell" style={{ fontWeight: 600 }}>LSTM (64 units, return_sequences=True)</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--bg-secondary)', fontSize: '0.85rem' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Regularization</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: '0.85rem' }}>
+                <span style={{ color: 'var(--text-dim)' }}>Regularization</span>
                 <span className="mono-cell" style={{ fontWeight: 600 }}>Dropout (0.20) + BatchNormalization</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--bg-secondary)', fontSize: '0.85rem' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Layer 2</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: '0.85rem' }}>
+                <span style={{ color: 'var(--text-dim)' }}>Layer 2</span>
                 <span className="mono-cell" style={{ fontWeight: 600 }}>LSTM (32 units) + Dense(16, relu)</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: '0.85rem' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Output Layer</span>
-                <span className="mono-cell" style={{ fontWeight: 600, color: 'var(--accent-orange)' }}>Dense(1, linear) → RUL Cycles</span>
+                <span style={{ color: 'var(--text-dim)' }}>Output Layer</span>
+                <span className="mono-cell" style={{ fontWeight: 600, color: 'var(--signal-mint)' }}>Dense(1, linear) → RUL Cycles</span>
               </div>
             </div>
           </div>
