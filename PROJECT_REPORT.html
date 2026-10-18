@@ -2,26 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GearGuard AI Cockpit - 4-Page Technical Project Report</title>
   
-  <!-- MathJax for rendering LaTeX formulas -->
   <script>
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']]
       },
-      svg: {
-        fontCache: 'global'
-      }
+      svg: { fontCache: 'global' }
     };
   </script>
   <script type="text/javascript" id="MathJax-script" async
     src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
   </script>
 
-  <!-- Mermaid.js for Architecture Flowchart -->
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script>
     mermaid.initialize({
@@ -43,12 +38,12 @@
     
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      font-size: 8.8pt;
-      line-height: 1.38;
+      font-size: 8pt;
+      line-height: 1.30;
       color: #1e293b;
       background-color: #0f172a;
       margin: 0;
-      padding: 20px;
+      padding: 16px;
     }
 
     .screen-controls {
@@ -68,28 +63,40 @@
     .screen-controls .title {
       font-size: 13px;
       font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
-    .print-btn {
+    .controls-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-btn {
       background: #0284c7;
       color: #ffffff;
       border: none;
-      padding: 8px 18px;
+      padding: 8px 16px;
       border-radius: 6px;
       font-weight: 700;
       font-size: 12px;
       cursor: pointer;
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       transition: background 0.2s;
     }
 
-    .print-btn:hover {
+    .action-btn:hover {
       background: #0369a1;
+    }
+
+    .action-btn.secondary {
+      background: #334155;
+      color: #e2e8f0;
+    }
+
+    .action-btn.secondary:hover {
+      background: #475569;
     }
 
     .report-wrapper {
@@ -99,82 +106,79 @@
 
     .page {
       background: #ffffff;
-      padding: 22mm 18mm 20mm 18mm;
+      padding: 14mm 16mm 12mm 16mm;
       margin-bottom: 24px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
       border-radius: 4px;
-      position: relative;
-      min-height: 297mm;
-      max-height: 297mm;
-      overflow: hidden;
+      min-height: 275mm;
+      box-sizing: border-box;
     }
 
-    /* Report Title & Metadata */
     .report-header h1 {
-      font-size: 14pt;
+      font-size: 13pt;
       color: #0f172a;
-      margin: 0 0 4px 0;
+      margin: 0 0 2px 0;
       text-transform: uppercase;
       letter-spacing: 0.03em;
       border-bottom: 2px solid #0284c7;
-      padding-bottom: 4px;
+      padding-bottom: 2px;
     }
     
     .report-header p {
-      margin: 2px 0;
-      font-size: 8.5pt;
+      margin: 1px 0;
+      font-size: 7.8pt;
       color: #475569;
     }
 
     .report-header hr {
       border: 0;
       border-top: 1px solid #e2e8f0;
-      margin: 8px 0 12px 0;
+      margin: 4px 0 6px 0;
     }
 
     h2 {
-      font-size: 11pt;
+      font-size: 9.8pt;
       color: #0369a1;
       border-bottom: 1.5px solid #cbd5e1;
       padding-bottom: 2px;
-      margin-top: 8px;
-      margin-bottom: 6px;
+      margin-top: 6px;
+      margin-bottom: 4px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
 
     h3 {
-      font-size: 9.3pt;
+      font-size: 8.5pt;
       color: #0f172a;
-      margin-top: 7px;
-      margin-bottom: 3px;
+      margin-top: 5px;
+      margin-bottom: 2px;
       font-weight: 700;
     }
 
     p {
-      margin: 0 0 5px 0;
+      margin: 0 0 4px 0;
       text-align: justify;
     }
 
     ul, ol {
-      margin: 0 0 5px 0;
-      padding-left: 16px;
+      margin: 0 0 4px 0;
+      padding-left: 14px;
     }
 
     li {
-      margin-bottom: 2px;
+      margin-bottom: 1px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin: 6px 0;
-      font-size: 8pt;
+      margin: 4px 0;
+      font-size: 7.4pt;
     }
 
     th, td {
       border: 1px solid #cbd5e1;
-      padding: 4px 6px;
+      padding: 3px 5px;
       text-align: left;
       vertical-align: middle;
     }
@@ -189,71 +193,82 @@
       background-color: #f8fafc;
     }
 
-    /* Screenshots sizing */
+    .page-2 .mermaid {
+      display: flex;
+      justify-content: center;
+      margin: 0 0 4px 0;
+      transform: scale(0.85);
+      transform-origin: top center;
+    }
+
     .page-3 img {
-      max-width: 100%;
       border: 1px solid #cbd5e1;
       border-radius: 4px;
       display: block;
-      margin: 4px auto;
+      margin: 2px auto;
     }
 
-    /* Dashboard screenshot on Page 3 */
-    .page-3 p:has(img) {
-      margin: 4px 0;
-    }
-    
     .page-3 > p:nth-of-type(2) img {
-      max-height: 250px;
+      max-height: 200px;
       object-fit: contain;
     }
 
-    /* Vision screenshots table on Page 3 */
     .page-3 table img {
-      max-height: 140px;
-      max-width: 190px;
+      max-height: 110px;
+      max-width: 170px;
       object-fit: cover;
     }
 
-    /* Benchmark screenshots on Page 4 */
-    .page-4 img {
-      max-height: 195px;
-      max-width: 95%;
+    .benchmark-grid {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .benchmark-col {
+      flex: 1;
+      font-size: 7.2pt;
+    }
+
+    .benchmark-col h4 {
+      margin: 2px 0;
+      font-size: 8pt;
+      color: #0f172a;
+    }
+
+    .benchmark-col img {
+      max-width: 100%;
+      max-height: 145px;
+      object-fit: contain;
       border: 1px solid #cbd5e1;
       border-radius: 4px;
       display: block;
-      margin: 4px auto;
-      object-fit: contain;
+      margin: 2px auto;
+    }
+
+    .benchmark-col ul {
+      padding-left: 12px;
+      margin: 2px 0;
     }
 
     .page-4 table {
-      font-size: 7.8pt;
-      margin-top: 6px;
+      font-size: 7.2pt;
+      margin-top: 4px;
     }
     
     .page-4 table th, .page-4 table td {
-      padding: 3px 5px;
-    }
-
-    /* Flowchart in Page 2 */
-    .mermaid {
-      display: flex;
-      justify-content: center;
-      margin: 4px 0 6px 0;
-      transform: scale(0.92);
-      transform-origin: top center;
+      padding: 2px 4px;
     }
 
     code {
       font-family: Consolas, monospace;
-      font-size: 8.2pt;
+      font-size: 7.6pt;
       background: #f1f5f9;
       padding: 1px 3px;
       border-radius: 3px;
       color: #0f172a;
     }
 
-    /* Print Specific Rules */
     @media print {
       body {
         background: #ffffff !important;
@@ -272,14 +287,15 @@
 
       .page {
         margin: 0 !important;
-        padding: 10mm 12mm 10mm 12mm !important;
+        padding: 0 !important;
         box-shadow: none !important;
         border-radius: 0 !important;
         page-break-after: always !important;
         break-after: page !important;
+        height: auto !important;
         min-height: auto !important;
         max-height: none !important;
-        height: 100% !important;
+        overflow: visible !important;
       }
 
       .page:last-child {
@@ -292,12 +308,13 @@
 <body>
   <div class="screen-controls">
     <div class="title">
-      <span>📄 GearGuard AI Cockpit — 4-Page Submission Report</span>
-      <span style="font-size: 11px; color: #94a3b8;">(Datasets, Modules/Algorithms & Screenshots Alone)</span>
+      <span>📄 GearGuard AI Cockpit — 4-Page Technical Submission</span>
     </div>
-    <button class="print-btn" onclick="window.print()">
-      🖨️ Print / Save as PDF
-    </button>
+    <div class="controls-actions">
+      <button class="action-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+      <a class="action-btn secondary" href="SHORT_4_PAGE_PROJECT_REPORT.pdf" download>📥 Download PDF</a>
+      <a class="action-btn secondary" href="SHORT_4_PAGE_PROJECT_REPORT.docx" download>📥 Download Word (.docx)</a>
+    </div>
   </div>
 
   <div class="report-wrapper">
@@ -430,30 +447,27 @@
 <div class="page page-4"><h2>PAGE 4 — MODEL BENCHMARK LAB SCREENSHOTS &amp; EMPIRICAL RESULTS</h2>
 <h3>Screenshot 4: XGBoost Benchmark Lab (Confusion Matrix &amp; Feature Importance)</h3>
 <p>The model evaluation lab validates diagnostic classification on an independent test split of <strong>2,000 industrial machines</strong>:</p>
-<p><img alt="XGBoost Benchmark - Confusion Matrix and Feature Importance" src="docs/screenshots/model_benchmark_xgboost.png" /></p>
-<ul>
-<li><strong>Left (Test Set Confusion Matrix - 2,000 Samples):</strong></li>
-<li><strong>True Negative (TN) = 1,676 (83.8%):</strong> Healthy machines correctly identified; normal production verified.</li>
-<li><strong>False Positive (FP) = 107 (5.4%):</strong> Safe precautionary inspections flagged for quick technician check.</li>
-<li><strong>False Negative (FN) = 32 (1.6%):</strong> Catastrophic misses held to an absolute minimum of 1.6%.</li>
-<li><strong>True Positive (TP) = 185 (9.3%):</strong> Genuine machine breakdowns intercepted prior to breakdown.</li>
-<li><strong>Right (XGBoost Feature Importance via Total Gain Ratio):</strong></li>
-<li><strong>Tool Wear (36.7%):</strong> Dominant failure driver; cutting blade friction causes exponential micro-cracks.</li>
-<li><strong>Torque (27.0%):</strong> Mechanical overstrain; high resistance indicates workpiece jamming or blunt tools.</li>
-<li><strong>Rotational Speed (13.7%):</strong> Spindle velocity envelope directly determines power dissipation ($P = \tau \cdot \omega$).</li>
-<li><strong>Air &amp; Process Temperatures (9.8% &amp; 9.4%):</strong> Thermal differential drives Heat Dissipation Failure (HDF).</li>
-<li><strong>Machine Type (3.4%):</strong> Baseline structural build rigidity rating across Light, Medium, and Heavy variants.</li>
-</ul>
-<hr />
-<h3>Screenshot 5: Deep Learning LSTM Regressor Benchmark (Loss Convergence Curve)</h3>
-<p>The prognostic regression model forecasts continuous Remaining Useful Life cycles without overfitting:</p>
-<p><img alt="LSTM Loss Convergence and Network Architecture Specifications" src="docs/screenshots/model_benchmark_lstm.png" /></p>
-<ul>
-<li><strong>Left (MSE Loss Convergence Curve):</strong></li>
-<li>Solid Orange Line (<code>Train Loss</code>) drops from <code>0.084</code> to <code>0.009</code> across 25 epochs.</li>
-<li>Dashed Green Line (<code>Val Loss</code>) tracks closely down to <code>0.011</code> with zero divergence, proving the 20% Dropout rate eliminated overfitting.</li>
-<li><strong>Right (Network Architecture Specifications):</strong> Summarizes the 64-unit and 32-unit stacked LSTM layers with Batch Normalization.</li>
-</ul>
+<div class="benchmark-grid">
+<div class="benchmark-col"><h4>XGBoost Diagnostic Lab</h4>![XGBoost Benchmark - Confusion Matrix and Feature Importance](docs/screenshots/model_benchmark_xgboost.png)
+* **Left (Test Set Confusion Matrix - 2,000 Samples):**
+  * **True Negative (TN) = 1,676 (83.8%):** Healthy machines correctly identified; normal production verified.
+  * **False Positive (FP) = 107 (5.4%):** Safe precautionary inspections flagged for quick technician check.
+  * **False Negative (FN) = 32 (1.6%):** Catastrophic misses held to an absolute minimum of 1.6%.
+  * **True Positive (TP) = 185 (9.3%):** Genuine machine breakdowns intercepted prior to breakdown.
+* **Right (XGBoost Feature Importance via Total Gain Ratio):**
+  * **Tool Wear (36.7%):** Dominant failure driver; cutting blade friction causes exponential micro-cracks.
+  * **Torque (27.0%):** Mechanical overstrain; high resistance indicates workpiece jamming or blunt tools.
+  * **Rotational Speed (13.7%):** Spindle velocity envelope directly determines power dissipation ($P = \tau \cdot \omega$).
+  * **Air & Process Temperatures (9.8% & 9.4%):** Thermal differential drives Heat Dissipation Failure (HDF).
+  * **Machine Type (3.4%):** Baseline structural build rigidity rating across Light, Medium, and Heavy variants.
+</div>
+<div class="benchmark-col"><h4>LSTM Prognostic Lab</h4>![LSTM Loss Convergence and Network Architecture Specifications](docs/screenshots/model_benchmark_lstm.png)
+* **Left (MSE Loss Convergence Curve):**
+  * Solid Orange Line (`Train Loss`) drops from `0.084` to `0.009` across 25 epochs.
+  * Dashed Green Line (`Val Loss`) tracks closely down to `0.011` with zero divergence, proving the 20% Dropout rate eliminated overfitting.
+* **Right (Network Architecture Specifications):** Summarizes the 64-unit and 32-unit stacked LSTM layers with Batch Normalization.
+</div>
+</div>
 <hr />
 <h3>Comprehensive Quantitative Metric Summary</h3>
 <table>
