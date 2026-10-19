@@ -95,31 +95,18 @@ Predictive maintenance, deep prognostics, and industrial computer vision have ex
 
 
 | Citation & Year | Primary Methodology | Dataset Evaluated | Key Findings & Quantitative Result | Identified Research Gap & Limitations Addressed by GearGuard |
-
 | :--- | :--- | :--- | :--- | :--- |
-
 | **Matzka (2020)** [1] | Explainable Machine Learning (Random Forest, TreeSHAP) | UCI AI4I 2020 CNC Milling (10,000 records) | Introduced the AI4I benchmark; demonstrated that tree ensembles outperform linear baselines with 96%+ accuracy. | Did not resolve the 3.39% class imbalance via cost-weighting; lacked temporal RUL forecasting and multimodal visual defect detection. |
-
 | **Saxena et al. (2020)** [2] | Physical damage propagation modeling and statistical filters | NASA C-MAPSS Turbomachinery (FD001–FD004) | Benchmarked exponential degradation trajectories for aircraft turbofans across operating profiles. | Purely statistical and physics-based; computationally heavy for high-frequency edge execution; no real-time telemetry streaming interface. |
-
 | **Baptista et al. (2021)** [3] | Autoregressive ML models and Kalman filters | Industrial run-to-failure sensory datasets | Demonstrated that multi-sensor feature interaction reduces early prognostic errors by 18%. | Relies on hand-engineered autoregressive terms; cannot process high-dimensional spatial camera feeds; lacked explainability. |
-
 | **Song & Yan (2021)** [4] | Deep Convolutional Neural Network with noise-robust filters | NEU Surface Defect Database (1,800 images) | Achieved 92.4% mAP in classifying steel surface fractures, crazing, and rolled-in scale. | Isolated exclusively to image processing; disconnected from operational motor telemetry (torque, rotational velocity, temperature). |
-
 | **Zhao et al. (2022)** [5] | Deep Learning review (CNN, RNN, Autoencoders) for machine health | Multiple industrial vibration and acoustic benchmarks | Showed that recurrent deep networks capture long-term mechanical degradation significantly better than static models. | Broad theoretical review; did not provide a deployed operational software architecture or unified diagnostic-prognostic pipeline. |
-
 | **Zhang et al. (2022)** [6] | Multi-layer Stacked LSTM with temporal attention | NASA C-MAPSS Turbofan Engine Simulator | Achieved RMSE of 41.2 cycles on FD001 by leveraging multi-sensor sequence dependencies. | High training overhead; attention weights did not provide localized game-theoretic feature attribution for human operators. |
-
 | **Carvalho et al. (2023)** [7] | Systematic literature review of 120+ PdM implementations in Industry 4.0 | Cross-industry manufacturing telemetry | Identified tree-based ensembles (Random Forest, XGBoost) and LSTMs as top-performing industrial algorithms. | Highlighted that 82% of reviewed studies remain offline prototypes without production-grade web cockpit dashboards. |
-
 | **Brito et al. (2023)** [8] | SHAP-enhanced Gradient Boosting for industrial manufacturing | Industrial rotational equipment telemetry | Demonstrated that SHAP attribution increases technician adoption by converting ML scores into actionable component checks. | Evaluated only binary failure state; did not integrate continuous remaining useful life estimation or edge vision. |
-
 | **Liu et al. (2024)** [9] | Multimodal sensory fusion with lightweight Vision Transformers (ViT) | Sensor arrays combined with infrared thermography | Proved that fusing optical thermal maps with vibration signals improves F1-score by 6.3% over unimodal models. | High parameter count (22M+ parameters); unsuitable for low-power edge nodes without discrete GPU acceleration. |
-
 | **Wang et al. (2024)** [10] | Edge-native deep learning for tool wear monitoring | CNC milling acoustic and force dynamometer signals | Achieved sub-25ms classification of tool wear states on embedded Raspberry Pi gateways. | Did not formulate remaining useful life; required expensive high-frequency dynamometer hardware not found in standard factories. |
-
 | **Chen et al. (2025)** [11] | Digital Twin architecture with hybrid diagnostic-prognostic models | Simulated factory production line telemetry | Reduced downtime by 24% in simulated automotive manufacturing using synchronized physical-digital models. | Relied heavily on complex commercial simulation environments; lacked open-source reproducible web architecture. |
-
 | **Ren et al. (2025)** [12] | Physics-informed neural networks (PINN) and gradient boosted trees | Heavy-duty rotating machinery run-to-failure logs | Demonstrated that embedding physical friction constraints improves small-sample prognostic stability. | Complex loss formulations require extensive domain calibration; slow inference latency (>120ms) precludes 50Hz sensor loops. |
 
 
@@ -209,13 +196,9 @@ GearGuard is trained, evaluated, and validated across three legitimate, publicly
 
 
 | Dataset Identifier | Domain & Application | Total Scale & Instances | Feature Channels / Dimension | Target Variable & Class Distribution | License & Provenance |
-
 | :--- | :--- | :--- | :--- | :--- | :--- |
-
 | **UCI AI4I 2020** [1] | High-precision CNC Milling Machine Telemetry | 10,000 synthetic records reflecting real milling logs | 6 operational features: Air Temp, Process Temp, Rotational Speed, Torque, Tool Wear, Machine Type | `Machine failure` (Binary):<br/>• Normal: 9,661 (96.61%)<br/>• Failure: 339 (3.39%) | Creative Commons Attribution 4.0 International (CC BY 4.0); UCI ML Repository |
-
 | **NASA C-MAPSS (FD001)** [2] | Aircraft Gas Turbine Engine Degradation | 100 engine units running to failure (20,631 total cycles) | 8 selected high-variance degradation channels (out of 21 raw channels): $T_{24}, T_{30}, T_{50}, P_{30}, N_f, P_{s30}, \phi, BPR$ | Continuous Remaining Useful Life (RUL) in cycles (range: 0 to 362 cycles) | Public Domain; NASA Prognostics Center of Excellence |
-
 | **NEU Surface & Industrial Defects** [4] | Industrial Manufacturing Shop-Floor Optical Defect Imagery | 1,800 surface defect images + calibrated shop-floor catalog | High-resolution RGB images resized to $224 \times 224 \times 3$ | Multi-class defects: Surface tears, cracks, flank chipping, hydraulic fluid leakage | Academic Research Open Access; Northeastern University |
 
 
@@ -453,25 +436,15 @@ To ensure strict scientific reproducibility, all models were evaluated under ide
 
 
 | Component | Technical Specification / Configuration |
-
 | :--- | :--- |
-
 | **Hardware Platform** | Intel® Core™ i7-11800H @ 2.30GHz (8 Cores, 16 Threads), 16 GB DDR4 RAM, NVIDIA GeForce RTX 3050 Laptop GPU (4 GB VRAM) |
-
 | **Operating System** | Microsoft Windows 11 64-bit |
-
 | **Software Stack** | Python 3.13.0, PyTorch 2.4.0, Scikit-learn 1.5.2, XGBoost 2.1.1, SHAP 0.46.0, NumPy 1.26.4, Pandas 2.2.2, FastAPI 0.115.0, React 18.3.1 |
-
 | **Data Partitioning** | Stratified 80/20 train/test split (8,000 train records, 2,000 test records) with fixed `random_state=42` |
-
 | **Logistic Regression (Baseline)** | `penalty='l2'`, `C=1.0`, `solver='lbfgs'`, `max_iter=1000`, `class_weight=None` |
-
 | **Random Forest Classifier** | `n_estimators=100`, `criterion='gini'`, `max_depth=10`, `min_samples_split=5`, `random_state=42` |
-
 | **XGBoost Classifier (Champion)**| `n_estimators=150`, `max_depth=5`, `learning_rate=0.05`, `scale_pos_weight=27.5`, `subsample=0.8`, `colsample_bytree=0.8`, `eval_metric='logloss'` |
-
 | **Stacked LSTM Regressor** | Sequence length = 20 steps, Layer 1 = 64 units, Dropout = 0.20, Layer 2 = 32 units, Dense = 16 units, Output = 1 unit; Optimizer = Adam ($\alpha = 0.005$), Epochs = 25, Batch Size = 32 |
-
 | **MobileNet-V3 Vision** | ImageNet pre-trained backbone, input resolution = $224 \times 224 \times 3$, central crop = 75%, $\theta_{\text{edge}} = 0.13$, $\theta_{\text{dark}} = 0.20$ |
 
 
@@ -543,19 +516,12 @@ We benchmarked three distinct machine learning algorithms for the diagnostic fai
 
 
 | Model Architecture | Task Type | Accuracy | Recall / Sensitivity | Specificity | Precision | F1-Score | ROC-AUC | Regression MAE | Regression $R^2$ | Inference Latency |
-
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-
 | **Logistic Regression** (Baseline) | Classification | 96.6% | 12.4% | 99.4% | 54.1% | 0.202 | 0.672 | — | — | **1.2 ms** |
-
 | **Random Forest** (100 Trees) | Classification | 97.4% | 71.9% | 98.1% | 68.2% | 0.700 | 0.891 | — | — | 8.4 ms |
-
 | **XGBoost (Cost-Weighted, Proposed)**| Classification | **97.8%** | **85.3%** | **94.0%** | **63.4%** | **0.727** | **0.937** | — | — | **5.1 ms** |
-
 | **Stacked LSTM** (64u + 32u) | RUL Regression | — | — | — | — | — | — | **30.20 cycles** | **0.645** | **7.8 ms** |
-
 | **MobileNet-V3 Small** | Edge Vision | **94.8%** | **91.2%** | **96.0%** | **88.4%** | **0.898** | **0.952** | — | — | **12.5 ms** |
-
 | **Full GearGuard Pipeline (Fused)** | Multimodal | **97.8%** | **85.3%** | **94.0%** | **63.4%** | **0.727** | **0.937** | **30.20 cycles** | **0.645** | **14.2 ms** |
 
 
@@ -633,11 +599,8 @@ Figure 3 illustrates the deployed GearGuard operational cockpit and edge compute
 
 
 | Sub-Assembly Monitored | Shop-Floor Defect Capture | Defect Classification Analysis & Action |
-
 | :--- | :---: | :--- |
-
 | **Material Handling Conveyor Belt** | ![Conveyor Belt Defect](file:///d:/MOTION-AI-Autonomous-Predictive-Intelligence-Cockpit-/docs/screenshots/conveyor_belt_damaged.jpg) | **Longitudinal Surface Tear & Frayed Rubber Core**<br/>• Edge Density: $\rho_{\text{edge}} = 0.142$ (Threshold $\gt  0.13$)<br/>• Defect State: **CRITICAL HAZARD**<br/>• Action: Automated Line B Replacement Work Order |
-
 | **High-Pressure Hydraulic Assembly** | ![Hydraulic Leakage Defect](file:///d:/MOTION-AI-Autonomous-Predictive-Intelligence-Cockpit-/docs/screenshots/hydraulic_leaking.jpg) | **Hydraulic Seal Failure & Fluid Leakage**<br/>• Dark Ratio: $r_{\text{dark}} = 0.228$ (Threshold $\gt  0.20$)<br/>• Defect State: **CRITICAL HAZARD**<br/>• Action: Emergency Depressurization & Valve Overhaul |
 
 

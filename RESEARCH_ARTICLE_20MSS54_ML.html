@@ -33,20 +33,20 @@
   <style>
     @page {
       size: A4 portrait;
-      margin: 14mm 16mm 14mm 16mm;
+      margin: 12mm 15mm 12mm 15mm;
     }
     * { box-sizing: border-box; }
     body {
       font-family: "Times New Roman", Times, Georgia, serif;
-      font-size: 10pt;
-      line-height: 1.52;
+      font-size: 9.8pt;
+      line-height: 1.48;
       color: #111827;
       background-color: #0f172a;
       margin: 0;
       padding: 20px;
     }
     .screen-controls {
-      max-width: 900px;
+      max-width: 920px;
       margin: 0 auto 18px auto;
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
       border: 1px solid #334155;
@@ -77,15 +77,15 @@
     }
     .action-btn.secondary { background: #334155; color: #e2e8f0; }
     .article-container {
-      max-width: 900px;
+      max-width: 920px;
       margin: 0 auto;
       background: #ffffff;
-      padding: 38px 46px;
+      padding: 34px 44px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.3);
       border-radius: 4px;
     }
     h1 {
-      font-size: 18pt;
+      font-size: 17pt;
       font-weight: 700;
       color: #0f172a;
       text-align: center;
@@ -94,27 +94,53 @@
       margin-bottom: 12px;
     }
     h2 {
-      font-size: 13pt;
+      font-size: 12.5pt;
       color: #0f172a;
       border-bottom: 1.5px solid #0f172a;
       padding-bottom: 3px;
-      margin-top: 24px;
+      margin-top: 22px;
       margin-bottom: 10px;
       text-transform: uppercase;
       letter-spacing: 0.02em;
     }
-    h3 { font-size: 11pt; color: #1e3a8a; margin-top: 16px; margin-bottom: 6px; font-weight: 700; }
-    p { margin: 0 0 10px 0; text-align: justify; }
-    ul, ol { margin: 0 0 12px 0; padding-left: 22px; }
-    li { margin-bottom: 4px; text-align: justify; }
-    .table-container { width: 100%; overflow-x: auto; margin: 14px 0; }
-    table { width: 100%; border-collapse: collapse; margin: 6px 0; font-size: 8.8pt; line-height: 1.35; }
-    th, td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: left; vertical-align: top; }
-    th { background-color: #f1f5f9; font-weight: 700; color: #0f172a; }
-    tr:nth-child(even) { background-color: #f8fafc; }
+    h3 { font-size: 10.8pt; color: #1e3a8a; margin-top: 15px; margin-bottom: 5px; font-weight: 700; }
+    p { margin: 0 0 9px 0; text-align: justify; }
+    ul, ol { margin: 0 0 10px 0; padding-left: 20px; }
+    li { margin-bottom: 3px; text-align: justify; }
+    
+    /* Responsive & Print Table Styles */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      margin: 14px 0 18px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 6px 0;
+      font-size: 8.5pt;
+      line-height: 1.35;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background-color: #f1f5f9;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    
     img { max-width: 100%; height: auto; border-radius: 4px; border: 1px solid #cbd5e1; display: block; margin: 12px auto; }
     .mermaid { display: flex; justify-content: center; margin: 16px 0; background: #fafafa; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0; }
-    code { font-family: Consolas, monospace; font-size: 8.8pt; background: #f1f5f9; padding: 1px 4px; border-radius: 3px; color: #0f172a; }
+    code { font-family: Consolas, monospace; font-size: 8.5pt; background: #f1f5f9; padding: 1px 4px; border-radius: 3px; color: #0f172a; }
+    
     @media print {
       body { background: #ffffff !important; padding: 0 !important; margin: 0 !important; }
       .screen-controls { display: none !important; }
@@ -131,7 +157,7 @@
     </div>
     <div class="controls-actions">
       <button class="action-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
-      <a class="action-btn secondary" href="RESEARCH_ARTICLE_20MSS54_ML.pdf" download>📥 Download PDF</a>
+      <a class="action-btn secondary" href="RESEARCH_ARTICLE_20MSS54_ML_LATEST.pdf" download>📥 Download PDF</a>
       <a class="action-btn secondary" href="RESEARCH_ARTICLE_20MSS54_ML.docx" download>📥 Download Word (.docx)</a>
     </div>
   </div>
@@ -195,20 +221,103 @@
 <h2>2. Related Work / Literature Review</h2>
 <p>Predictive maintenance, deep prognostics, and industrial computer vision have experienced rapid academic and industrial acceleration between 2020 and 2025. We conducted a systematic review of verifiable peer-reviewed literature in this domain, summarized in Table 1.</p>
 <p><strong>Table 1: Systematic Summary of Related Work in Predictive Maintenance and Industrial AI (2020–2025)</strong></p>
-<p>| Citation &amp; Year | Primary Methodology | Dataset Evaluated | Key Findings &amp; Quantitative Result | Identified Research Gap &amp; Limitations Addressed by GearGuard |</p>
-<p>| :--- | :--- | :--- | :--- | :--- |</p>
-<p>| <strong>Matzka (2020)</strong> [1] | Explainable Machine Learning (Random Forest, TreeSHAP) | UCI AI4I 2020 CNC Milling (10,000 records) | Introduced the AI4I benchmark; demonstrated that tree ensembles outperform linear baselines with 96%+ accuracy. | Did not resolve the 3.39% class imbalance via cost-weighting; lacked temporal RUL forecasting and multimodal visual defect detection. |</p>
-<p>| <strong>Saxena et al. (2020)</strong> [2] | Physical damage propagation modeling and statistical filters | NASA C-MAPSS Turbomachinery (FD001–FD004) | Benchmarked exponential degradation trajectories for aircraft turbofans across operating profiles. | Purely statistical and physics-based; computationally heavy for high-frequency edge execution; no real-time telemetry streaming interface. |</p>
-<p>| <strong>Baptista et al. (2021)</strong> [3] | Autoregressive ML models and Kalman filters | Industrial run-to-failure sensory datasets | Demonstrated that multi-sensor feature interaction reduces early prognostic errors by 18%. | Relies on hand-engineered autoregressive terms; cannot process high-dimensional spatial camera feeds; lacked explainability. |</p>
-<p>| <strong>Song &amp; Yan (2021)</strong> [4] | Deep Convolutional Neural Network with noise-robust filters | NEU Surface Defect Database (1,800 images) | Achieved 92.4% mAP in classifying steel surface fractures, crazing, and rolled-in scale. | Isolated exclusively to image processing; disconnected from operational motor telemetry (torque, rotational velocity, temperature). |</p>
-<p>| <strong>Zhao et al. (2022)</strong> [5] | Deep Learning review (CNN, RNN, Autoencoders) for machine health | Multiple industrial vibration and acoustic benchmarks | Showed that recurrent deep networks capture long-term mechanical degradation significantly better than static models. | Broad theoretical review; did not provide a deployed operational software architecture or unified diagnostic-prognostic pipeline. |</p>
-<p>| <strong>Zhang et al. (2022)</strong> [6] | Multi-layer Stacked LSTM with temporal attention | NASA C-MAPSS Turbofan Engine Simulator | Achieved RMSE of 41.2 cycles on FD001 by leveraging multi-sensor sequence dependencies. | High training overhead; attention weights did not provide localized game-theoretic feature attribution for human operators. |</p>
-<p>| <strong>Carvalho et al. (2023)</strong> [7] | Systematic literature review of 120+ PdM implementations in Industry 4.0 | Cross-industry manufacturing telemetry | Identified tree-based ensembles (Random Forest, XGBoost) and LSTMs as top-performing industrial algorithms. | Highlighted that 82% of reviewed studies remain offline prototypes without production-grade web cockpit dashboards. |</p>
-<p>| <strong>Brito et al. (2023)</strong> [8] | SHAP-enhanced Gradient Boosting for industrial manufacturing | Industrial rotational equipment telemetry | Demonstrated that SHAP attribution increases technician adoption by converting ML scores into actionable component checks. | Evaluated only binary failure state; did not integrate continuous remaining useful life estimation or edge vision. |</p>
-<p>| <strong>Liu et al. (2024)</strong> [9] | Multimodal sensory fusion with lightweight Vision Transformers (ViT) | Sensor arrays combined with infrared thermography | Proved that fusing optical thermal maps with vibration signals improves F1-score by 6.3% over unimodal models. | High parameter count (22M+ parameters); unsuitable for low-power edge nodes without discrete GPU acceleration. |</p>
-<p>| <strong>Wang et al. (2024)</strong> [10] | Edge-native deep learning for tool wear monitoring | CNC milling acoustic and force dynamometer signals | Achieved sub-25ms classification of tool wear states on embedded Raspberry Pi gateways. | Did not formulate remaining useful life; required expensive high-frequency dynamometer hardware not found in standard factories. |</p>
-<p>| <strong>Chen et al. (2025)</strong> [11] | Digital Twin architecture with hybrid diagnostic-prognostic models | Simulated factory production line telemetry | Reduced downtime by 24% in simulated automotive manufacturing using synchronized physical-digital models. | Relied heavily on complex commercial simulation environments; lacked open-source reproducible web architecture. |</p>
-<p>| <strong>Ren et al. (2025)</strong> [12] | Physics-informed neural networks (PINN) and gradient boosted trees | Heavy-duty rotating machinery run-to-failure logs | Demonstrated that embedding physical friction constraints improves small-sample prognostic stability. | Complex loss formulations require extensive domain calibration; slow inference latency (&gt;120ms) precludes 50Hz sensor loops. |</p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Citation &amp; Year</th>
+<th style="text-align: left;">Primary Methodology</th>
+<th style="text-align: left;">Dataset Evaluated</th>
+<th style="text-align: left;">Key Findings &amp; Quantitative Result</th>
+<th style="text-align: left;">Identified Research Gap &amp; Limitations Addressed by GearGuard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Matzka (2020)</strong> [1]</td>
+<td style="text-align: left;">Explainable Machine Learning (Random Forest, TreeSHAP)</td>
+<td style="text-align: left;">UCI AI4I 2020 CNC Milling (10,000 records)</td>
+<td style="text-align: left;">Introduced the AI4I benchmark; demonstrated that tree ensembles outperform linear baselines with 96%+ accuracy.</td>
+<td style="text-align: left;">Did not resolve the 3.39% class imbalance via cost-weighting; lacked temporal RUL forecasting and multimodal visual defect detection.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Saxena et al. (2020)</strong> [2]</td>
+<td style="text-align: left;">Physical damage propagation modeling and statistical filters</td>
+<td style="text-align: left;">NASA C-MAPSS Turbomachinery (FD001–FD004)</td>
+<td style="text-align: left;">Benchmarked exponential degradation trajectories for aircraft turbofans across operating profiles.</td>
+<td style="text-align: left;">Purely statistical and physics-based; computationally heavy for high-frequency edge execution; no real-time telemetry streaming interface.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Baptista et al. (2021)</strong> [3]</td>
+<td style="text-align: left;">Autoregressive ML models and Kalman filters</td>
+<td style="text-align: left;">Industrial run-to-failure sensory datasets</td>
+<td style="text-align: left;">Demonstrated that multi-sensor feature interaction reduces early prognostic errors by 18%.</td>
+<td style="text-align: left;">Relies on hand-engineered autoregressive terms; cannot process high-dimensional spatial camera feeds; lacked explainability.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Song &amp; Yan (2021)</strong> [4]</td>
+<td style="text-align: left;">Deep Convolutional Neural Network with noise-robust filters</td>
+<td style="text-align: left;">NEU Surface Defect Database (1,800 images)</td>
+<td style="text-align: left;">Achieved 92.4% mAP in classifying steel surface fractures, crazing, and rolled-in scale.</td>
+<td style="text-align: left;">Isolated exclusively to image processing; disconnected from operational motor telemetry (torque, rotational velocity, temperature).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Zhao et al. (2022)</strong> [5]</td>
+<td style="text-align: left;">Deep Learning review (CNN, RNN, Autoencoders) for machine health</td>
+<td style="text-align: left;">Multiple industrial vibration and acoustic benchmarks</td>
+<td style="text-align: left;">Showed that recurrent deep networks capture long-term mechanical degradation significantly better than static models.</td>
+<td style="text-align: left;">Broad theoretical review; did not provide a deployed operational software architecture or unified diagnostic-prognostic pipeline.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Zhang et al. (2022)</strong> [6]</td>
+<td style="text-align: left;">Multi-layer Stacked LSTM with temporal attention</td>
+<td style="text-align: left;">NASA C-MAPSS Turbofan Engine Simulator</td>
+<td style="text-align: left;">Achieved RMSE of 41.2 cycles on FD001 by leveraging multi-sensor sequence dependencies.</td>
+<td style="text-align: left;">High training overhead; attention weights did not provide localized game-theoretic feature attribution for human operators.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Carvalho et al. (2023)</strong> [7]</td>
+<td style="text-align: left;">Systematic literature review of 120+ PdM implementations in Industry 4.0</td>
+<td style="text-align: left;">Cross-industry manufacturing telemetry</td>
+<td style="text-align: left;">Identified tree-based ensembles (Random Forest, XGBoost) and LSTMs as top-performing industrial algorithms.</td>
+<td style="text-align: left;">Highlighted that 82% of reviewed studies remain offline prototypes without production-grade web cockpit dashboards.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Brito et al. (2023)</strong> [8]</td>
+<td style="text-align: left;">SHAP-enhanced Gradient Boosting for industrial manufacturing</td>
+<td style="text-align: left;">Industrial rotational equipment telemetry</td>
+<td style="text-align: left;">Demonstrated that SHAP attribution increases technician adoption by converting ML scores into actionable component checks.</td>
+<td style="text-align: left;">Evaluated only binary failure state; did not integrate continuous remaining useful life estimation or edge vision.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Liu et al. (2024)</strong> [9]</td>
+<td style="text-align: left;">Multimodal sensory fusion with lightweight Vision Transformers (ViT)</td>
+<td style="text-align: left;">Sensor arrays combined with infrared thermography</td>
+<td style="text-align: left;">Proved that fusing optical thermal maps with vibration signals improves F1-score by 6.3% over unimodal models.</td>
+<td style="text-align: left;">High parameter count (22M+ parameters); unsuitable for low-power edge nodes without discrete GPU acceleration.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Wang et al. (2024)</strong> [10]</td>
+<td style="text-align: left;">Edge-native deep learning for tool wear monitoring</td>
+<td style="text-align: left;">CNC milling acoustic and force dynamometer signals</td>
+<td style="text-align: left;">Achieved sub-25ms classification of tool wear states on embedded Raspberry Pi gateways.</td>
+<td style="text-align: left;">Did not formulate remaining useful life; required expensive high-frequency dynamometer hardware not found in standard factories.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Chen et al. (2025)</strong> [11]</td>
+<td style="text-align: left;">Digital Twin architecture with hybrid diagnostic-prognostic models</td>
+<td style="text-align: left;">Simulated factory production line telemetry</td>
+<td style="text-align: left;">Reduced downtime by 24% in simulated automotive manufacturing using synchronized physical-digital models.</td>
+<td style="text-align: left;">Relied heavily on complex commercial simulation environments; lacked open-source reproducible web architecture.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Ren et al. (2025)</strong> [12]</td>
+<td style="text-align: left;">Physics-informed neural networks (PINN) and gradient boosted trees</td>
+<td style="text-align: left;">Heavy-duty rotating machinery run-to-failure logs</td>
+<td style="text-align: left;">Demonstrated that embedding physical friction constraints improves small-sample prognostic stability.</td>
+<td style="text-align: left;">Complex loss formulations require extensive domain calibration; slow inference latency (&gt;120ms) precludes 50Hz sensor loops.</td>
+</tr>
+</tbody>
+</table></div>
 <h3>Research Gap Analysis</h3>
 <p>The literature reveals three persistent shortcomings:</p>
 <ol>
@@ -281,11 +390,44 @@
 <h2>4. Dataset Description</h2>
 <p>GearGuard is trained, evaluated, and validated across three legitimate, publicly accessible industrial datasets:</p>
 <p><strong>Table 2: Dataset Characteristics, Schema, and Data Governance</strong></p>
-<p>| Dataset Identifier | Domain &amp; Application | Total Scale &amp; Instances | Feature Channels / Dimension | Target Variable &amp; Class Distribution | License &amp; Provenance |</p>
-<p>| :--- | :--- | :--- | :--- | :--- | :--- |</p>
-<p>| <strong>UCI AI4I 2020</strong> [1] | High-precision CNC Milling Machine Telemetry | 10,000 synthetic records reflecting real milling logs | 6 operational features: Air Temp, Process Temp, Rotational Speed, Torque, Tool Wear, Machine Type | <code>Machine failure</code> (Binary):<br/>• Normal: 9,661 (96.61%)<br/>• Failure: 339 (3.39%) | Creative Commons Attribution 4.0 International (CC BY 4.0); UCI ML Repository |</p>
-<p>| <strong>NASA C-MAPSS (FD001)</strong> [2] | Aircraft Gas Turbine Engine Degradation | 100 engine units running to failure (20,631 total cycles) | 8 selected high-variance degradation channels (out of 21 raw channels): $T_{24}, T_{30}, T_{50}, P_{30}, N_f, P_{s30}, \phi, BPR$ | Continuous Remaining Useful Life (RUL) in cycles (range: 0 to 362 cycles) | Public Domain; NASA Prognostics Center of Excellence |</p>
-<p>| <strong>NEU Surface &amp; Industrial Defects</strong> [4] | Industrial Manufacturing Shop-Floor Optical Defect Imagery | 1,800 surface defect images + calibrated shop-floor catalog | High-resolution RGB images resized to $224 \times 224 \times 3$ | Multi-class defects: Surface tears, cracks, flank chipping, hydraulic fluid leakage | Academic Research Open Access; Northeastern University |</p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Dataset Identifier</th>
+<th style="text-align: left;">Domain &amp; Application</th>
+<th style="text-align: left;">Total Scale &amp; Instances</th>
+<th style="text-align: left;">Feature Channels / Dimension</th>
+<th style="text-align: left;">Target Variable &amp; Class Distribution</th>
+<th style="text-align: left;">License &amp; Provenance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>UCI AI4I 2020</strong> [1]</td>
+<td style="text-align: left;">High-precision CNC Milling Machine Telemetry</td>
+<td style="text-align: left;">10,000 synthetic records reflecting real milling logs</td>
+<td style="text-align: left;">6 operational features: Air Temp, Process Temp, Rotational Speed, Torque, Tool Wear, Machine Type</td>
+<td style="text-align: left;"><code>Machine failure</code> (Binary):<br/>• Normal: 9,661 (96.61%)<br/>• Failure: 339 (3.39%)</td>
+<td style="text-align: left;">Creative Commons Attribution 4.0 International (CC BY 4.0); UCI ML Repository</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>NASA C-MAPSS (FD001)</strong> [2]</td>
+<td style="text-align: left;">Aircraft Gas Turbine Engine Degradation</td>
+<td style="text-align: left;">100 engine units running to failure (20,631 total cycles)</td>
+<td style="text-align: left;">8 selected high-variance degradation channels (out of 21 raw channels): $T_{24}, T_{30}, T_{50}, P_{30}, N_f, P_{s30}, \phi, BPR$</td>
+<td style="text-align: left;">Continuous Remaining Useful Life (RUL) in cycles (range: 0 to 362 cycles)</td>
+<td style="text-align: left;">Public Domain; NASA Prognostics Center of Excellence</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>NEU Surface &amp; Industrial Defects</strong> [4]</td>
+<td style="text-align: left;">Industrial Manufacturing Shop-Floor Optical Defect Imagery</td>
+<td style="text-align: left;">1,800 surface defect images + calibrated shop-floor catalog</td>
+<td style="text-align: left;">High-resolution RGB images resized to $224 \times 224 \times 3$</td>
+<td style="text-align: left;">Multi-class defects: Surface tears, cracks, flank chipping, hydraulic fluid leakage</td>
+<td style="text-align: left;">Academic Research Open Access; Northeastern University</td>
+</tr>
+</tbody>
+</table></div>
 <h3>Detailed Feature Schema (UCI AI4I 2020)</h3>
 <ul>
 <li>
@@ -483,17 +625,52 @@ flowchart TD
 <h2>6. Experimental Setup</h2>
 <p>To ensure strict scientific reproducibility, all models were evaluated under identical experimental conditions and consistent train/test partitions.</p>
 <p><strong>Table 3: Hardware, Software Environment, and Hyperparameter Specifications</strong></p>
-<p>| Component | Technical Specification / Configuration |</p>
-<p>| :--- | :--- |</p>
-<p>| <strong>Hardware Platform</strong> | Intel® Core™ i7-11800H @ 2.30GHz (8 Cores, 16 Threads), 16 GB DDR4 RAM, NVIDIA GeForce RTX 3050 Laptop GPU (4 GB VRAM) |</p>
-<p>| <strong>Operating System</strong> | Microsoft Windows 11 64-bit |</p>
-<p>| <strong>Software Stack</strong> | Python 3.13.0, PyTorch 2.4.0, Scikit-learn 1.5.2, XGBoost 2.1.1, SHAP 0.46.0, NumPy 1.26.4, Pandas 2.2.2, FastAPI 0.115.0, React 18.3.1 |</p>
-<p>| <strong>Data Partitioning</strong> | Stratified 80/20 train/test split (8,000 train records, 2,000 test records) with fixed <code>random_state=42</code> |</p>
-<p>| <strong>Logistic Regression (Baseline)</strong> | <code>penalty='l2'</code>, <code>C=1.0</code>, <code>solver='lbfgs'</code>, <code>max_iter=1000</code>, <code>class_weight=None</code> |</p>
-<p>| <strong>Random Forest Classifier</strong> | <code>n_estimators=100</code>, <code>criterion='gini'</code>, <code>max_depth=10</code>, <code>min_samples_split=5</code>, <code>random_state=42</code> |</p>
-<p>| <strong>XGBoost Classifier (Champion)</strong>| <code>n_estimators=150</code>, <code>max_depth=5</code>, <code>learning_rate=0.05</code>, <code>scale_pos_weight=27.5</code>, <code>subsample=0.8</code>, <code>colsample_bytree=0.8</code>, <code>eval_metric='logloss'</code> |</p>
-<p>| <strong>Stacked LSTM Regressor</strong> | Sequence length = 20 steps, Layer 1 = 64 units, Dropout = 0.20, Layer 2 = 32 units, Dense = 16 units, Output = 1 unit; Optimizer = Adam ($\alpha = 0.005$), Epochs = 25, Batch Size = 32 |</p>
-<p>| <strong>MobileNet-V3 Vision</strong> | ImageNet pre-trained backbone, input resolution = $224 \times 224 \times 3$, central crop = 75%, $\theta_{\text{edge}} = 0.13$, $\theta_{\text{dark}} = 0.20$ |</p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Component</th>
+<th style="text-align: left;">Technical Specification / Configuration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Hardware Platform</strong></td>
+<td style="text-align: left;">Intel® Core™ i7-11800H @ 2.30GHz (8 Cores, 16 Threads), 16 GB DDR4 RAM, NVIDIA GeForce RTX 3050 Laptop GPU (4 GB VRAM)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Operating System</strong></td>
+<td style="text-align: left;">Microsoft Windows 11 64-bit</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Software Stack</strong></td>
+<td style="text-align: left;">Python 3.13.0, PyTorch 2.4.0, Scikit-learn 1.5.2, XGBoost 2.1.1, SHAP 0.46.0, NumPy 1.26.4, Pandas 2.2.2, FastAPI 0.115.0, React 18.3.1</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Data Partitioning</strong></td>
+<td style="text-align: left;">Stratified 80/20 train/test split (8,000 train records, 2,000 test records) with fixed <code>random_state=42</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Logistic Regression (Baseline)</strong></td>
+<td style="text-align: left;"><code>penalty='l2'</code>, <code>C=1.0</code>, <code>solver='lbfgs'</code>, <code>max_iter=1000</code>, <code>class_weight=None</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Random Forest Classifier</strong></td>
+<td style="text-align: left;"><code>n_estimators=100</code>, <code>criterion='gini'</code>, <code>max_depth=10</code>, <code>min_samples_split=5</code>, <code>random_state=42</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>XGBoost Classifier (Champion)</strong></td>
+<td style="text-align: left;"><code>n_estimators=150</code>, <code>max_depth=5</code>, <code>learning_rate=0.05</code>, <code>scale_pos_weight=27.5</code>, <code>subsample=0.8</code>, <code>colsample_bytree=0.8</code>, <code>eval_metric='logloss'</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Stacked LSTM Regressor</strong></td>
+<td style="text-align: left;">Sequence length = 20 steps, Layer 1 = 64 units, Dropout = 0.20, Layer 2 = 32 units, Dense = 16 units, Output = 1 unit; Optimizer = Adam ($\alpha = 0.005$), Epochs = 25, Batch Size = 32</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>MobileNet-V3 Vision</strong></td>
+<td style="text-align: left;">ImageNet pre-trained backbone, input resolution = $224 \times 224 \times 3$, central crop = 75%, $\theta_{\text{edge}} = 0.13$, $\theta_{\text{dark}} = 0.20$</td>
+</tr>
+</tbody>
+</table></div>
 <hr />
 <h2>7. Evaluation Metrics</h2>
 <p>Because industrial failure prediction is characterized by severe class imbalance, accuracy alone is deceptive. We evaluate classification performance using five rigorous metrics:</p>
@@ -534,14 +711,103 @@ flowchart TD
 <h3>8.1 Quantitative Model Comparison</h3>
 <p>We benchmarked three distinct machine learning algorithms for the diagnostic failure classification task and evaluated the Stacked LSTM network for prognostic RUL regression on the independent 2,000-sample test set.</p>
 <p><strong>Table 4: Comparative Performance of Evaluated Machine Learning and Deep Learning Models</strong></p>
-<p>| Model Architecture | Task Type | Accuracy | Recall / Sensitivity | Specificity | Precision | F1-Score | ROC-AUC | Regression MAE | Regression $R^2$ | Inference Latency |</p>
-<p>| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |</p>
-<p>| <strong>Logistic Regression</strong> (Baseline) | Classification | 96.6% | 12.4% | 99.4% | 54.1% | 0.202 | 0.672 | — | — | <strong>1.2 ms</strong> |</p>
-<p>| <strong>Random Forest</strong> (100 Trees) | Classification | 97.4% | 71.9% | 98.1% | 68.2% | 0.700 | 0.891 | — | — | 8.4 ms |</p>
-<p>| <strong>XGBoost (Cost-Weighted, Proposed)</strong>| Classification | <strong>97.8%</strong> | <strong>85.3%</strong> | <strong>94.0%</strong> | <strong>63.4%</strong> | <strong>0.727</strong> | <strong>0.937</strong> | — | — | <strong>5.1 ms</strong> |</p>
-<p>| <strong>Stacked LSTM</strong> (64u + 32u) | RUL Regression | — | — | — | — | — | — | <strong>30.20 cycles</strong> | <strong>0.645</strong> | <strong>7.8 ms</strong> |</p>
-<p>| <strong>MobileNet-V3 Small</strong> | Edge Vision | <strong>94.8%</strong> | <strong>91.2%</strong> | <strong>96.0%</strong> | <strong>88.4%</strong> | <strong>0.898</strong> | <strong>0.952</strong> | — | — | <strong>12.5 ms</strong> |</p>
-<p>| <strong>Full GearGuard Pipeline (Fused)</strong> | Multimodal | <strong>97.8%</strong> | <strong>85.3%</strong> | <strong>94.0%</strong> | <strong>63.4%</strong> | <strong>0.727</strong> | <strong>0.937</strong> | <strong>30.20 cycles</strong> | <strong>0.645</strong> | <strong>14.2 ms</strong> |</p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Model Architecture</th>
+<th style="text-align: left;">Task Type</th>
+<th style="text-align: center;">Accuracy</th>
+<th style="text-align: center;">Recall / Sensitivity</th>
+<th style="text-align: center;">Specificity</th>
+<th style="text-align: center;">Precision</th>
+<th style="text-align: center;">F1-Score</th>
+<th style="text-align: center;">ROC-AUC</th>
+<th style="text-align: center;">Regression MAE</th>
+<th style="text-align: center;">Regression $R^2$</th>
+<th style="text-align: center;">Inference Latency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Logistic Regression</strong> (Baseline)</td>
+<td style="text-align: left;">Classification</td>
+<td style="text-align: center;">96.6%</td>
+<td style="text-align: center;">12.4%</td>
+<td style="text-align: center;">99.4%</td>
+<td style="text-align: center;">54.1%</td>
+<td style="text-align: center;">0.202</td>
+<td style="text-align: center;">0.672</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;"><strong>1.2 ms</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Random Forest</strong> (100 Trees)</td>
+<td style="text-align: left;">Classification</td>
+<td style="text-align: center;">97.4%</td>
+<td style="text-align: center;">71.9%</td>
+<td style="text-align: center;">98.1%</td>
+<td style="text-align: center;">68.2%</td>
+<td style="text-align: center;">0.700</td>
+<td style="text-align: center;">0.891</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">8.4 ms</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>XGBoost (Cost-Weighted, Proposed)</strong></td>
+<td style="text-align: left;">Classification</td>
+<td style="text-align: center;"><strong>97.8%</strong></td>
+<td style="text-align: center;"><strong>85.3%</strong></td>
+<td style="text-align: center;"><strong>94.0%</strong></td>
+<td style="text-align: center;"><strong>63.4%</strong></td>
+<td style="text-align: center;"><strong>0.727</strong></td>
+<td style="text-align: center;"><strong>0.937</strong></td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;"><strong>5.1 ms</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Stacked LSTM</strong> (64u + 32u)</td>
+<td style="text-align: left;">RUL Regression</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;"><strong>30.20 cycles</strong></td>
+<td style="text-align: center;"><strong>0.645</strong></td>
+<td style="text-align: center;"><strong>7.8 ms</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>MobileNet-V3 Small</strong></td>
+<td style="text-align: left;">Edge Vision</td>
+<td style="text-align: center;"><strong>94.8%</strong></td>
+<td style="text-align: center;"><strong>91.2%</strong></td>
+<td style="text-align: center;"><strong>96.0%</strong></td>
+<td style="text-align: center;"><strong>88.4%</strong></td>
+<td style="text-align: center;"><strong>0.898</strong></td>
+<td style="text-align: center;"><strong>0.952</strong></td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;"><strong>12.5 ms</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Full GearGuard Pipeline (Fused)</strong></td>
+<td style="text-align: left;">Multimodal</td>
+<td style="text-align: center;"><strong>97.8%</strong></td>
+<td style="text-align: center;"><strong>85.3%</strong></td>
+<td style="text-align: center;"><strong>94.0%</strong></td>
+<td style="text-align: center;"><strong>63.4%</strong></td>
+<td style="text-align: center;"><strong>0.727</strong></td>
+<td style="text-align: center;"><strong>0.937</strong></td>
+<td style="text-align: center;"><strong>30.20 cycles</strong></td>
+<td style="text-align: center;"><strong>0.645</strong></td>
+<td style="text-align: center;"><strong>14.2 ms</strong></td>
+</tr>
+</tbody>
+</table></div>
 <p>As demonstrated in Table 4, baseline Logistic Regression fails catastrophically on the primary industrial objective, missing 87.6% of real failures (Recall = 12.4%) because the unweighted linear decision boundary is overwhelmed by the 96.61% majority class. Random Forest improves Recall to 71.9%. The proposed <strong>cost-weighted XGBoost classifier achieves champion performance</strong>, elevating Recall to <strong>85.3%</strong> (catching 185 out of 217 real test failures) and delivering an <strong>ROC-AUC of 0.937</strong>, while maintaining an overall accuracy of 97.8%.</p>
 <hr />
 <h3>8.2 Diagnostic Benchmark &amp; Feature Importance Visualizations</h3>
@@ -589,10 +855,27 @@ flowchart TD
 <h3>8.3 Operational Prototype &amp; Edge Computer Vision Screenshots</h3>
 <p>Figure 3 illustrates the deployed GearGuard operational cockpit and edge computer vision inspection modules.</p>
 <p><img alt="GearGuard Industrial Failure Prevention Cockpit Dashboard" src="file:///d:/MOTION-AI-Autonomous-Predictive-Intelligence-Cockpit-/docs/screenshots/dashboard_live_telemetry.png" /></p>
-<p>| Sub-Assembly Monitored | Shop-Floor Defect Capture | Defect Classification Analysis &amp; Action |</p>
-<p>| :--- | :---: | :--- |</p>
-<p>| <strong>Material Handling Conveyor Belt</strong> | <img alt="Conveyor Belt Defect" src="file:///d:/MOTION-AI-Autonomous-Predictive-Intelligence-Cockpit-/docs/screenshots/conveyor_belt_damaged.jpg" /> | <strong>Longitudinal Surface Tear &amp; Frayed Rubber Core</strong><br/>• Edge Density: $\rho_{\text{edge}} = 0.142$ (Threshold $\gt  0.13$)<br/>• Defect State: <strong>CRITICAL HAZARD</strong><br/>• Action: Automated Line B Replacement Work Order |</p>
-<p>| <strong>High-Pressure Hydraulic Assembly</strong> | <img alt="Hydraulic Leakage Defect" src="file:///d:/MOTION-AI-Autonomous-Predictive-Intelligence-Cockpit-/docs/screenshots/hydraulic_leaking.jpg" /> | <strong>Hydraulic Seal Failure &amp; Fluid Leakage</strong><br/>• Dark Ratio: $r_{\text{dark}} = 0.228$ (Threshold $\gt  0.20$)<br/>• Defect State: <strong>CRITICAL HAZARD</strong><br/>• Action: Emergency Depressurization &amp; Valve Overhaul |</p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Sub-Assembly Monitored</th>
+<th style="text-align: center;">Shop-Floor Defect Capture</th>
+<th style="text-align: left;">Defect Classification Analysis &amp; Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Material Handling Conveyor Belt</strong></td>
+<td style="text-align: center;"><img alt="Conveyor Belt Defect" src="file:///d:/MOTION-AI-Autonomous-Predictive-Intelligence-Cockpit-/docs/screenshots/conveyor_belt_damaged.jpg" /></td>
+<td style="text-align: left;"><strong>Longitudinal Surface Tear &amp; Frayed Rubber Core</strong><br/>• Edge Density: $\rho_{\text{edge}} = 0.142$ (Threshold $\gt  0.13$)<br/>• Defect State: <strong>CRITICAL HAZARD</strong><br/>• Action: Automated Line B Replacement Work Order</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>High-Pressure Hydraulic Assembly</strong></td>
+<td style="text-align: center;"><img alt="Hydraulic Leakage Defect" src="file:///d:/MOTION-AI-Autonomous-Predictive-Intelligence-Cockpit-/docs/screenshots/hydraulic_leaking.jpg" /></td>
+<td style="text-align: left;"><strong>Hydraulic Seal Failure &amp; Fluid Leakage</strong><br/>• Dark Ratio: $r_{\text{dark}} = 0.228$ (Threshold $\gt  0.20$)<br/>• Defect State: <strong>CRITICAL HAZARD</strong><br/>• Action: Emergency Depressurization &amp; Valve Overhaul</td>
+</tr>
+</tbody>
+</table></div>
 <p><em>Figure 3: Operational deployment. Top: Central GearGuard live telemetry cockpit monitoring 15 production machines in real time. Bottom: Edge computer vision defect inspection of critical conveyor belt and hydraulic sub-assemblies.</em></p>
 <ul>
 <li>
