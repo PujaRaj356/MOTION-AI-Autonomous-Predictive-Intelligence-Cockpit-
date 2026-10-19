@@ -1,9 +1,6 @@
 # GearGuard: A Hybrid Diagnostic-Prognostic Multimodal Machine Learning Framework for Autonomous Industrial Failure Prevention and Real-Time RUL Estimation
 
-**Course Code:** 20MSS54-ML — Assessment-II: ML/DL Research Article Writing  
-**Authors:** Puja R (Roll No. 2403717672622039) and Rakshita N (Roll No. 2403717672622040)  
-**Affiliation:** Department of Software Systems, Coimbatore Institute of Technology, Coimbatore, Tamil Nadu, India  
-**Academic Year:** 2025 – 2026  
+**Submitted by** Rakshita N (2403717672622040)
 
 ---
 
