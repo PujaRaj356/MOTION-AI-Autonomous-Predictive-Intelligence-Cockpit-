@@ -75,13 +75,13 @@ GearGuard directly addresses these gaps by engineering an integrated, multimodal
 
 ### Problem Formulation
 Consider an industrial manufacturing cell containing $M$ cyber-physical production machines monitored over discrete time steps $t \in \{1, 2, \dots, T\}$. At each time step $t$, the system ingests:
-1. A continuous multivariate sensor telemetry vector $\mathbf{x}_t \in \mathbb{R}^d$ capturing physical state variables: ambient temperature $T_{	ext{air}}$, cutting zone process temperature $T_{	ext{process}}$, spindle rotational speed $\omega$, cutting torque $	au$, cumulative tool cutting time $t_{	ext{wear}}$, and machine structural rating $g_{	ext{type}}$.
-2. A historical temporal sliding sequence $\mathbf{X}_{t-W:t} = [\mathbf{x}_{t-W+1}, \dots, \mathbf{x}_t]^T \in \mathbb{R}^{W 	imes C}$ capturing $W$ consecutive time steps across $C$ critical degradation channels.
-3. An optical RGB video frame $\mathbf{I}_t \in \mathbb{R}^{H 	imes W 	imes 3}$ captured from shop-floor cameras monitoring critical external sub-assemblies (conveyor belts and hydraulic lines).
+1. A continuous multivariate sensor telemetry vector $\mathbf{x}_t \in \mathbb{R}^d$ capturing physical state variables: ambient temperature $T_{\text{air}}$, cutting zone process temperature $T_{\text{process}}$, spindle rotational speed $\omega$, cutting torque $\tau$, cumulative tool cutting time $t_{\text{wear}}$, and machine structural rating $g_{\text{type}}$.
+2. A historical temporal sliding sequence $\mathbf{X}_{t-W:t} = [\mathbf{x}_{t-W+1}, \dots, \mathbf{x}_t]^T \in \mathbb{R}^{W \times C}$ capturing $W$ consecutive time steps across $C$ critical degradation channels.
+3. An optical RGB video frame $\mathbf{I}_t \in \mathbb{R}^{H \times W \times 3}$ captured from shop-floor cameras monitoring critical external sub-assemblies (conveyor belts and hydraulic lines).
 
 The objective is to simultaneously solve three learning tasks:
-* **Task 1: Real-Time Failure Classification (Diagnostic):** Predict the instantaneous failure state $y_t \in \{0, 1\}$, where $y_t = 1$ denotes imminent mechanical failure, maximizing Recall under severe class imbalance ($P(y=1) pprox 0.034$).
-* **Task 2: Remaining Useful Life Regression (Prognostic):** Predict the remaining operational lifetime $\widehat{	ext{RUL}}_t \in \mathbb{R}^+$ in machine operating cycles before functional failure occurs.
+* **Task 1: Real-Time Failure Classification (Diagnostic):** Predict the instantaneous failure state $y_t \in \{0, 1\}$, where $y_t = 1$ denotes imminent mechanical failure, maximizing Recall under severe class imbalance ($P(y=1) \approx 0.034$).
+* **Task 2: Remaining Useful Life Regression (Prognostic):** Predict the remaining operational lifetime $\widehat{\text{RUL}}_t \in \mathbb{R}^+$ in machine operating cycles before functional failure occurs.
 * **Task 3: Optical Defect Screening (Edge Computer Vision):** Identify structural surface defects (tears, cracks, oil leaks) on peripheral shop-floor components while rejecting non-industrial objects.
 
 ### Stakeholders and Impact
@@ -107,28 +107,28 @@ GearGuard is trained, evaluated, and validated across three legitimate, publicly
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **UCI AI4I 2020** [1] | High-precision CNC Milling Machine Telemetry | 10,000 synthetic records reflecting real milling logs | 6 operational features: Air Temp, Process Temp, Rotational Speed, Torque, Tool Wear, Machine Type | `Machine failure` (Binary):<br/>• Normal: 9,661 (96.61%)<br/>• Failure: 339 (3.39%) | Creative Commons Attribution 4.0 International (CC BY 4.0); UCI ML Repository |
 | **NASA C-MAPSS (FD001)** [2] | Aircraft Gas Turbine Engine Degradation | 100 engine units running to failure (20,631 total cycles) | 8 selected high-variance degradation channels (out of 21 raw channels): $T_{24}, T_{30}, T_{50}, P_{30}, N_f, P_{s30}, \phi, BPR$ | Continuous Remaining Useful Life (RUL) in cycles (range: 0 to 362 cycles) | Public Domain; NASA Prognostics Center of Excellence |
-| **NEU Surface & Industrial Defects** [4] | Industrial Manufacturing Shop-Floor Optical Defect Imagery | 1,800 surface defect images + calibrated shop-floor catalog | High-resolution RGB images resized to $224 	imes 224 	imes 3$ | Multi-class defects: Surface tears, cracks, flank chipping, hydraulic fluid leakage | Academic Research Open Access; Northeastern University |
+| **NEU Surface & Industrial Defects** [4] | Industrial Manufacturing Shop-Floor Optical Defect Imagery | 1,800 surface defect images + calibrated shop-floor catalog | High-resolution RGB images resized to $224 \times 224 \times 3$ | Multi-class defects: Surface tears, cracks, flank chipping, hydraulic fluid leakage | Academic Research Open Access; Northeastern University |
 
 ### Detailed Feature Schema (UCI AI4I 2020)
-* **Air Temperature ($T_{	ext{air}}$) [K]:** Ambient room temperature generated as a random walk around $300.0	ext{ K}$ ($\sigma = 2.0	ext{ K}$, range: $295.3	ext{ K} - 304.5	ext{ K}$).
-* **Process Temperature ($T_{	ext{process}}$) [K]:** Cutting zone thermal accumulation generated as $T_{	ext{air}} + 10.0	ext{ K} + \epsilon$ ($\sigma = 1.0	ext{ K}$, range: $305.7	ext{ K} - 313.8	ext{ K}$).
-* **Rotational Speed ($\omega$) [rpm]:** Spindle motor velocity calculated from a power baseline of $2,860	ext{ W}$, subject to normal variations ($\mu = 1538.8	ext{ rpm}$, range: $1,168 - 2,886	ext{ rpm}$).
-* **Torque ($	au$) [Nm]:** Cutting resistance normally distributed around $40.0	ext{ Nm}$ ($\sigma = 9.96	ext{ Nm}$, range: $3.8 - 76.6	ext{ Nm}$), with no negative values.
-* **Tool Wear ($t_{	ext{wear}}$) [min]:** Cumulative cutting friction duration on carbide tool inserts ($0	ext{ to }253	ext{ minutes}$).
+* **Air Temperature ($T_{\text{air}}$) [K]:** Ambient room temperature generated as a random walk around $300.0\text{ K}$ ($\sigma = 2.0\text{ K}$, range: $295.3\text{ K} - 304.5\text{ K}$).
+* **Process Temperature ($T_{\text{process}}$) [K]:** Cutting zone thermal accumulation generated as $T_{\text{air}} + 10.0\text{ K} + \epsilon$ ($\sigma = 1.0\text{ K}$, range: $305.7\text{ K} - 313.8\text{ K}$).
+* **Rotational Speed ($\omega$) [rpm]:** Spindle motor velocity calculated from a power baseline of $2,860\text{ W}$, subject to normal variations ($\mu = 1538.8\text{ rpm}$, range: $1,168 - 2,886\text{ rpm}$).
+* **Torque ($\tau$) [Nm]:** Cutting resistance normally distributed around $40.0\text{ Nm}$ ($\sigma = 9.96\text{ Nm}$, range: $3.8 - 76.6\text{ Nm}$), with no negative values.
+* **Tool Wear ($t_{\text{wear}}$) [min]:** Cumulative cutting friction duration on carbide tool inserts ($0\text{ to }253\text{ minutes}$).
 * **Machine Type Variant:** Industrial quality grade: `L` (Light Duty, 50%), `M` (Medium Duty, 30%), and `H` (Heavy Duty, 20%).
 * **Specific Physical Failure Modes Modeled:**
-  * *Tool Wear Failure (TWF):* Tool wear between $200 - 240	ext{ min}$ combined with excessive cutting cycles.
-  * *Heat Dissipation Failure (HDF):* Difference $\Delta T = T_{	ext{process}} - T_{	ext{air}} < 8.6	ext{ K}$ combined with low spindle speed ($\omega < 1,380	ext{ rpm}$).
-  * *Power Failure (PWF):* Mechanical cutting power $P = 	au \cdot \omega$ falling outside the safe operational envelope ($P < 3,500	ext{ W}$ or $P > 9,000	ext{ W}$).
+  * *Tool Wear Failure (TWF):* Tool wear between $200 - 240\text{ min}$ combined with excessive cutting cycles.
+  * *Heat Dissipation Failure (HDF):* Difference $\Delta T = T_{\text{process}} - T_{\text{air}} < 8.6\text{ K}$ combined with low spindle speed ($\omega < 1,380\text{ rpm}$).
+  * *Power Failure (PWF):* Mechanical cutting power $P = \tau \cdot \omega$ falling outside the safe operational envelope ($P < 3,500\text{ W}$ or $P > 9,000\text{ W}$).
   * *Overstrain Failure (OSF):* Product of tool wear and torque exceeding structural failure limits.
 
 ### Data Preprocessing and Leakage Prevention
 1. **Stratified Partitioning:** The 10,000 records of the AI4I dataset were partitioned using stratified 80/20 train/test sampling, yielding **8,000 training records** and an independent **2,000 test records** with the exact 3.39% failure proportion preserved across splits.
 2. **Temporal Unit-Based Partitioning:** For the NASA C-MAPSS dataset, data was split strictly by physical engine unit ID (Units 1–80 for training, Units 81–100 reserved for test), eliminating temporal leakage across sliding horizons.
 3. **Leak-Free StandardScaler:** Continuous features were standardized to zero mean and unit variance:
-   $$z = rac{x - \mu_{	ext{train}}}{\sigma_{	ext{train}}}$$
-   The parameters $\mu_{	ext{train}}$ and $\sigma_{	ext{train}}$ were fitted exclusively on the training split and applied as frozen transformations to the test set.
-4. **Categorical Encoding:** The machine type variant was mapped ordinally: $	ext{L} 	o 0, 	ext{M} 	o 1, 	ext{H} 	o 2$.
+   $$z = \frac{x - \mu_{\text{train}}}{\sigma_{\text{train}}}$$
+   The parameters $\mu_{\text{train}}$ and $\sigma_{\text{train}}$ were fitted exclusively on the training split and applied as frozen transformations to the test set.
+4. **Categorical Encoding:** The machine type variant was mapped ordinally: $\text{L} \o 0, \text{M} \o 1, \text{H} \o 2$.
 
 ---
 
@@ -173,29 +173,29 @@ flowchart TD
 
 ### 5.1 Module 1: Diagnostic Failure Classifier (XGBoost)
 To detect imminent mechanical breakdowns, we employ **Extreme Gradient Boosting (XGBoost)**, an optimized distributed gradient boosted decision tree algorithm. XGBoost minimizes a regularized objective function at step $t$:
-$$\mathcal{L}^{(t)} = \sum_{i=1}^n l\left(y_i, \hat{y}_i^{(t-1)} + f_t(\mathbf{x}_i)ight) + \Omega(f_t)$$
-where $\Omega(f) = \gamma T + rac{1}{2}\lambda \sum_{j=1}^T w_j^2$ penalizes tree complexity, $T$ is the number of leaves, and $w_j$ are leaf weights. Using second-order Taylor expansion:
-$$\mathcal{L}^{(t)} pprox \sum_{i=1}^n \left[ l(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(\mathbf{x}_i) + rac{1}{2} h_i f_t^2(\mathbf{x}_i) ight] + \Omega(f_t)$$
+$$\mathcal{L}^{(t)} = \sum_{i=1}^n l\left(y_i, \hat{y}_i^{(t-1)} + f_t(\mathbf{x}_i)\right) + \Omega(f_t)$$
+where $\Omega(f) = \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2$ penalizes tree complexity, $T$ is the number of leaves, and $w_j$ are leaf weights. Using second-order Taylor expansion:
+$$\mathcal{L}^{(t)} \approx \sum_{i=1}^n \left[ l(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(\mathbf{x}_i) + \frac{1}{2} h_i f_t^2(\mathbf{x}_i) \right] + \Omega(f_t)$$
 where $g_i = \partial_{\hat{y}^{(t-1)}} l(y_i, \hat{y}^{(t-1)})$ and $h_i = \partial^2_{\hat{y}^{(t-1)}} l(y_i, \hat{y}^{(t-1)})$ are the first and second order gradients.
 
 **Handling Severe Class Imbalance:** To prevent the model from defaulting to the majority non-failure class (96.61%), we configure the cost-sensitive parameter:
-$$	ext{scale\_pos\_weight} = rac{N_{	ext{negative}}}{N_{	ext{positive}}} = rac{9,661}{339} pprox 27.5$$
-This scales the gradient $g_i$ and Hessian $h_i$ for positive failure instances by $27.5	imes$, heavily penalizing False Negatives (missed breakdowns).
+$$\text{scale\_pos\_weight} = \frac{N_{\text{negative}}}{N_{\text{positive}}} = \frac{9,661}{339} \approx 27.5$$
+This scales the gradient $g_i$ and Hessian $h_i$ for positive failure instances by $27.5\times$, heavily penalizing False Negatives (missed breakdowns).
 
 ### 5.2 Module 2: Prognostic Remaining Useful Life Regressor (Stacked LSTM)
 Static models treat each sensor measurement independently. To capture non-linear wear accumulation and thermal lag over time, we employ a **Stacked Long Short-Term Memory (LSTM)** recurrent neural network. The LSTM cell regulates information flow via three gating mechanisms:
 * **Forget Gate:** $f_t = \sigma(W_f \cdot [h_{t-1}, x_t] + b_f)$
-* **Input Gate:** $i_t = \sigma(W_i \cdot [h_{t-1}, x_t] + b_i), \quad 	ilde{C}_t = 	anh(W_c \cdot [h_{t-1}, x_t] + b_c)$
-* **Cell State Update:** $C_t = f_t \odot C_{t-1} + i_t \odot 	ilde{C}_t$
-* **Output Gate:** $o_t = \sigma(W_o \cdot [h_{t-1}, x_t] + b_o), \quad h_t = o_t \odot 	anh(C_t)$
+* **Input Gate:** $i_t = \sigma(W_i \cdot [h_{t-1}, x_t] + b_i), \quad \tilde{C}_t = \tanh(W_c \cdot [h_{t-1}, x_t] + b_c)$
+* **Cell State Update:** $C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$
+* **Output Gate:** $o_t = \sigma(W_o \cdot [h_{t-1}, x_t] + b_o), \quad h_t = o_t \odot \tanh(C_t)$
 
 **Network Architecture:**
-* **Input Buffer:** Sliding temporal window $\mathbf{X} \in \mathbb{R}^{20 	imes 8}$ (20 consecutive cycles across 8 normalized sensor channels).
+* **Input Buffer:** Sliding temporal window $\mathbf{X} \in \mathbb{R}^{20 \times 8}$ (20 consecutive cycles across 8 normalized sensor channels).
 * **Layer 1:** `LSTM(units=64, return_sequences=True)` extracting low-level temporal features.
 * **Regularization:** `Dropout(rate=0.20)` (randomly deactivating 20% of recurrent units during training to prevent co-adaptation) followed by `BatchNormalization`.
 * **Layer 2:** `LSTM(units=32, return_sequences=False)` capturing degradation momentum.
-* **Dense Mapping:** Fully connected `Dense(units=16, activation='relu')` $	o$ `Dense(units=1, activation='linear')` outputting the predicted RUL in continuous cycles.
-* **Loss Function:** Mean Squared Error (MSE) optimized via the Adam algorithm ($lpha = 0.005$).
+* **Dense Mapping:** Fully connected `Dense(units=16, activation='relu')` $\o$ `Dense(units=1, activation='linear')` outputting the predicted RUL in continuous cycles.
+* **Loss Function:** Mean Squared Error (MSE) optimized via the Adam algorithm ($\alpha = 0.005$).
 
 ### 5.3 Module 3: Multimodal Edge Computer Vision Inspection
 To complement telemetry diagnostics, we deploy a lightweight **MobileNet-V3 Small** convolutional neural network on edge camera streams. MobileNet-V3 utilizes depthwise separable convolutions and squeeze-and-excitation (SE) attention blocks, requiring only 2.5 million parameters.
@@ -204,18 +204,18 @@ To complement telemetry diagnostics, we deploy a lightweight **MobileNet-V3 Smal
 1. **Target Verification:** MobileNet-V3 pre-trained on ImageNet screens each captured frame. If the classified object is non-industrial (e.g., coffee mug, smartphone), the frame is rejected with an operational alert.
 2. **Structural Defect Extraction:** For verified machinery frames, the central 75% region of interest (ROI) is cropped and processed through two morphological operations:
    * **Sobel Fracture Edge Density:** Detects jagged surface cracks, blade chipping, and conveyor rubber tears:
-     $$ho_{	ext{edge}} = rac{1}{H \cdot W} \sum_{x=1}^H \sum_{y=1}^W \mathbb{I}\left( \sqrt{G_x(x,y)^2 + G_y(x,y)^2} > 	heta_{	ext{edge}} ight)$$
+     $$\rho_{\text{edge}} = \frac{1}{H \cdot W} \sum_{x=1}^H \sum_{y=1}^W \mathbb{I}\left( \sqrt{G_x(x,y)^2 + G_y(x,y)^2} > \theta_{\text{edge}} \right)$$
    * **Dark-Ratio Pooling:** Detects high-pressure fluid leaks, oil pooling, and thermal scorch burns:
-     $$r_{	ext{dark}} = rac{1}{H \cdot W} \sum_{x=1}^H \sum_{y=1}^W \mathbb{I}\left( I(x,y) < 	heta_{	ext{dark}} ight)$$
+     $$r_{\text{dark}} = \frac{1}{H \cdot W} \sum_{x=1}^H \sum_{y=1}^W \mathbb{I}\left( I(x,y) < \theta_{\text{dark}} \right)$$
 
 ### 5.4 Proposed Innovation: Explainable AI & Prescriptive Cockpit
 To eliminate the black-box barrier in industrial adoption, we embed a **SHAP (SHapley Additive exPlanations) TreeExplainer** rooted in cooperative game theory. For any prediction $f(\mathbf{x})$, the local attribution $\phi_i(\mathbf{x})$ for feature $i$ is calculated as:
-$$\phi_i(\mathbf{x}) = \sum_{S \subseteq F \setminus \{i\}} rac{|S|!(|F| - |S| - 1)!}{|F|!} \left[ f(S \cup \{i\}) - f(S) ight]$$
+$$\phi_i(\mathbf{x}) = \sum_{S \subseteq F \setminus \{i\}} \frac{|S|!(|F| - |S| - 1)!}{|F|!} \left[ f(S \cup \{i\}) - f(S) \right]$$
 This guarantees additive feature attribution such that $\sum_{i=1}^d \phi_i(\mathbf{x}) = f(\mathbf{x}) - \mathbb{E}[f(\mathbf{X})]$.
 
-**Unified Health Engine:** The prescriptive engine combines XGBoost failure probability $P_{	ext{fail}}$, LSTM normalized life ratio $R_{	ext{life}} = \min(1.0, \widehat{	ext{RUL}} / 150)$, and vision defect penalty $V_{	ext{defect}}$ into a single **Fleet Health Index (0–100%)**:
-$$	ext{FHI} = 100 	imes \left(1.0 - 0.50 \cdot P_{	ext{fail}} - 0.30 \cdot (1.0 - R_{	ext{life}}) - 0.20 \cdot V_{	ext{defect}}ight)$$
-When $	ext{FHI} < 60\%$, the system automatically drafts an emergency maintenance work order specifying the affected machine unit, root-cause component, and recommended tool replacement.
+**Unified Health Engine:** The prescriptive engine combines XGBoost failure probability $P_{\text{fail}}$, LSTM normalized life ratio $R_{\text{life}} = \min(1.0, \widehat{\text{RUL}} / 150)$, and vision defect penalty $V_{\text{defect}}$ into a single **Fleet Health Index (0–100%)**:
+$$\text{FHI} = 100 \times \left(1.0 - 0.50 \cdot P_{\text{fail}} - 0.30 \cdot (1.0 - R_{\text{life}}) - 0.20 \cdot V_{\text{defect}}\right)$$
+When $\text{FHI} < 60\%$, the system automatically drafts an emergency maintenance work order specifying the affected machine unit, root-cause component, and recommended tool replacement.
 
 ---
 
@@ -234,8 +234,8 @@ To ensure strict scientific reproducibility, all models were evaluated under ide
 | **Logistic Regression (Baseline)** | `penalty='l2'`, `C=1.0`, `solver='lbfgs'`, `max_iter=1000`, `class_weight=None` |
 | **Random Forest Classifier** | `n_estimators=100`, `criterion='gini'`, `max_depth=10`, `min_samples_split=5`, `random_state=42` |
 | **XGBoost Classifier (Champion)**| `n_estimators=150`, `max_depth=5`, `learning_rate=0.05`, `scale_pos_weight=27.5`, `subsample=0.8`, `colsample_bytree=0.8`, `eval_metric='logloss'` |
-| **Stacked LSTM Regressor** | Sequence length = 20 steps, Layer 1 = 64 units, Dropout = 0.20, Layer 2 = 32 units, Dense = 16 units, Output = 1 unit; Optimizer = Adam ($lpha = 0.005$), Epochs = 25, Batch Size = 32 |
-| **MobileNet-V3 Vision** | ImageNet pre-trained backbone, input resolution = $224 	imes 224 	imes 3$, central crop = 75%, $	heta_{	ext{edge}} = 0.13$, $	heta_{	ext{dark}} = 0.20$ |
+| **Stacked LSTM Regressor** | Sequence length = 20 steps, Layer 1 = 64 units, Dropout = 0.20, Layer 2 = 32 units, Dense = 16 units, Output = 1 unit; Optimizer = Adam ($\alpha = 0.005$), Epochs = 25, Batch Size = 32 |
+| **MobileNet-V3 Vision** | ImageNet pre-trained backbone, input resolution = $224 \times 224 \times 3$, central crop = 75%, $\theta_{\text{edge}} = 0.13$, $\theta_{\text{dark}} = 0.20$ |
 
 ---
 
@@ -244,22 +244,22 @@ To ensure strict scientific reproducibility, all models were evaluated under ide
 Because industrial failure prediction is characterized by severe class imbalance, accuracy alone is deceptive. We evaluate classification performance using five rigorous metrics:
 
 1. **Recall / Sensitivity (Primary Industrial KPI):** Measures the proportion of real breakdowns intercepted:
-   $$	ext{Recall} = rac{	ext{TP}}{	ext{TP} + 	ext{FN}}$$
+   $$\text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}$$
 2. **Specificity:** Measures the proportion of healthy operating periods correctly identified:
-   $$	ext{Specificity} = rac{	ext{TN}}{	ext{TN} + 	ext{FP}}$$
+   $$\text{Specificity} = \frac{\text{TN}}{\text{TN} + \text{FP}}$$
 3. **Precision:** Measures the reliability of an issued failure alarm:
-   $$	ext{Precision} = rac{	ext{TP}}{	ext{TP} + 	ext{FP}}$$
+   $$\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}$$
 4. **F1-Score:** Harmonic mean balancing precision and recall:
-   $$	ext{F1-Score} = 2 \cdot rac{	ext{Precision} \cdot 	ext{Recall}}{	ext{Precision} + 	ext{Recall}}$$
-5. **ROC-AUC (Receiver Operating Characteristic - Area Under Curve):** Measures discriminative capability across all decision thresholds $	au \in [0, 1]$.
+   $$\text{F1-Score} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$$
+5. **ROC-AUC (Receiver Operating Characteristic - Area Under Curve):** Measures discriminative capability across all decision thresholds $\tau \in [0, 1]$.
 
 For continuous Remaining Useful Life (RUL) prognostic regression, we evaluate:
 1. **Mean Absolute Error (MAE):** Average magnitude of cycle prediction error:
-   $$	ext{MAE} = rac{1}{N} \sum_{i=1}^N |y_i - \hat{y}_i|$$
+   $$\text{MAE} = \frac{1}{N} \sum_{i=1}^N |y_i - \hat{y}_i|$$
 2. **Root Mean Squared Error (RMSE):** Penalizes large cycle deviations heavily:
-   $$	ext{RMSE} = \sqrt{rac{1}{N} \sum_{i=1}^N (y_i - \hat{y}_i)^2}$$
+   $$\text{RMSE} = \sqrt{\frac{1}{N} \sum_{i=1}^N (y_i - \hat{y}_i)^2}$$
 3. **Coefficient of Determination ($R^2$):** Proportion of variance explained by the model:
-   $$R^2 = 1 - rac{\sum_{i=1}^N (y_i - \hat{y}_i)^2}{\sum_{i=1}^N (y_i - ar{y})^2}$$
+   $$R^2 = 1 - \frac{\sum_{i=1}^N (y_i - \hat{y}_i)^2}{\sum_{i=1}^N (y_i - ar{y})^2}$$
 
 ---
 
@@ -301,8 +301,8 @@ Figure 2 displays the empirical evaluation results for the XGBoost classifier an
 Analysis of total gain ratios confirms the physical validity of the learned decision trees:
 1. **Tool Wear (36.7%):** Dominant failure predictor; micro-fractures in cutting carbide inserts exponentially increase cutting friction.
 2. **Torque (27.0%):** Direct measure of mechanical overstrain; high resistance indicates workpiece jamming or blunt tools.
-3. **Rotational Speed (13.7%):** Determines operating power dissipation ($P = 	au \cdot \omega$) and centrifugal vibration envelope.
-4. **Air & Process Temperatures (19.2% Combined):** Governs the thermal dissipation gradient ($\Delta T = T_{	ext{process}} - T_{	ext{air}}$), directly triggering Heat Dissipation Failures (HDF).
+3. **Rotational Speed (13.7%):** Determines operating power dissipation ($P = \tau \cdot \omega$) and centrifugal vibration envelope.
+4. **Air & Process Temperatures (19.2% Combined):** Governs the thermal dissipation gradient ($\Delta T = T_{\text{process}} - T_{\text{air}}$), directly triggering Heat Dissipation Failures (HDF).
 5. **Machine Type (3.4%):** Captures baseline structural rigidity across Light (L), Medium (M), and Heavy (H) machine frames.
 
 #### LSTM Training Loss Convergence
@@ -317,8 +317,8 @@ Figure 3 illustrates the deployed GearGuard operational cockpit and edge compute
 
 | Sub-Assembly Monitored | Shop-Floor Defect Capture | Defect Classification Analysis & Action |
 | :--- | :---: | :--- |
-| **Material Handling Conveyor Belt** | ![Conveyor Belt Defect](file:///d:/MOTION-AI-Autonomous-Predictive-Intelligence-Cockpit-/docs/screenshots/conveyor_belt_damaged.jpg) | **Longitudinal Surface Tear & Frayed Rubber Core**<br/>• Edge Density: $ho_{	ext{edge}} = 0.142$ (Threshold $> 0.13$)<br/>• Defect State: **CRITICAL HAZARD**<br/>• Action: Automated Line B Replacement Work Order |
-| **High-Pressure Hydraulic Assembly** | ![Hydraulic Leakage Defect](file:///d:/MOTION-AI-Autonomous-Predictive-Intelligence-Cockpit-/docs/screenshots/hydraulic_leaking.jpg) | **Hydraulic Seal Failure & Fluid Leakage**<br/>• Dark Ratio: $r_{	ext{dark}} = 0.228$ (Threshold $> 0.20$)<br/>• Defect State: **CRITICAL HAZARD**<br/>• Action: Emergency Depressurization & Valve Overhaul |
+| **Material Handling Conveyor Belt** | ![Conveyor Belt Defect](file:///d:/MOTION-AI-Autonomous-Predictive-Intelligence-Cockpit-/docs/screenshots/conveyor_belt_damaged.jpg) | **Longitudinal Surface Tear & Frayed Rubber Core**<br/>• Edge Density: $\rho_{\text{edge}} = 0.142$ (Threshold $> 0.13$)<br/>• Defect State: **CRITICAL HAZARD**<br/>• Action: Automated Line B Replacement Work Order |
+| **High-Pressure Hydraulic Assembly** | ![Hydraulic Leakage Defect](file:///d:/MOTION-AI-Autonomous-Predictive-Intelligence-Cockpit-/docs/screenshots/hydraulic_leaking.jpg) | **Hydraulic Seal Failure & Fluid Leakage**<br/>• Dark Ratio: $r_{\text{dark}} = 0.228$ (Threshold $> 0.20$)<br/>• Defect State: **CRITICAL HAZARD**<br/>• Action: Emergency Depressurization & Valve Overhaul |
 
 *Figure 3: Operational deployment. Top: Central GearGuard live telemetry cockpit monitoring 15 production machines in real time. Bottom: Edge computer vision defect inspection of critical conveyor belt and hydraulic sub-assemblies.*
 
@@ -337,14 +337,14 @@ In consumer machine learning applications (e.g., search recommendations), high P
 
 ### Explainability and Trust
 A frequent barrier to adopting AI in manufacturing is operator skepticism toward opaque predictions [1], [8]. The integration of the SHAP TreeExplainer resolves this barrier. When GearGuard alerts an operator to Machine Unit 04, the cockpit does not simply display an abstract risk score; it explicitly shows:
-$$	ext{Risk Contribution} = 	ext{Base Risk (3.4%)} + 0.52 \cdot (	ext{Tool Wear} = 228	ext{ min}) + 0.31 \cdot (	ext{Torque} = 68.2	ext{ Nm})$$
+$$\text{Risk Contribution} = \text{Base Risk (3.4%)} + 0.52 \cdot (\text{Tool Wear} = 228\text{ min}) + 0.31 \cdot (\text{Torque} = 68.2\text{ Nm})$$
 This actionable insight enables the technician to immediately inspect the cutting insert rather than spending hours troubleshooting electrical or coolant subsystems.
 
 ### Computational Efficiency and Edge Feasibility
 The total pipeline inference latency of **14.2 ms** (5.1ms for XGBoost, 7.8ms for LSTM, and 1.3ms for health index aggregation) comfortably satisfies the operational requirements of high-frequency industrial fieldbuses (e.g., Modbus TCP and OPC-UA), which typically operate at 10–50 Hz polling cycles. This confirms that the framework can be deployed directly on standard industrial PCs (IPCs) or edge gateways without requiring expensive cloud infrastructure.
 
 ### Error Analysis and Limitations
-Analysis of the 32 False Negative cases reveals that they predominantly belong to the *Tool Wear Failure (TWF)* category occurring at borderline wear values ($195 - 205	ext{ min}$) combined with normal torque readings, where micro-fractures occurred without detectable motor load increases. Future iterations could address this by incorporating high-frequency acoustic emission or vibration accelerometer sensors.
+Analysis of the 32 False Negative cases reveals that they predominantly belong to the *Tool Wear Failure (TWF)* category occurring at borderline wear values ($195 - 205\text{ min}$) combined with normal torque readings, where micro-fractures occurred without detectable motor load increases. Future iterations could address this by incorporating high-frequency acoustic emission or vibration accelerometer sensors.
 
 ---
 
