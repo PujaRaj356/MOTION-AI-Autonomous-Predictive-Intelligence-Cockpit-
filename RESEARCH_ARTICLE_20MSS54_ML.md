@@ -8,7 +8,7 @@
 ---
 
 ### ABSTRACT
-Machines break down. It happens every single day on factory floors, and when it does, the whole assembly line stalls while repair costs pile up. Most manufacturing plants still handle maintenance through pure habit: either running parts until they literally shatter, or replacing components on rigid calendar schedules whether they are worn out or not. The first habit causes severe secondary equipment damage, while the second discards parts that still retain over 70% of their operational life. We built GearGuard to replace that guesswork with reliable, data-backed foresight. Our system handles three core jobs simultaneously: catching sudden mechanical breakdown risks from sensor streams, estimating how many operating cycles an aging machine has left before failure (Remaining Useful Life), and scanning shop-floor camera feeds for visible issues like cracked conveyor belts or leaking hydraulic oil lines. We evaluated our models on three benchmark datasets, led by the 10,000-record UCI AI4I 2020 CNC milling dataset. One immediate real-world challenge was severe data imbalance: out of 10,000 machining runs, only 339 were actual breakdowns—just 3.39% of the data. Training a baseline Logistic Regression model on this data gave a deceptive 96.6% accuracy on paper, but it missed 87.6% of real breakdowns, scoring a dismal 12.4% Recall. In a factory, letting nearly nine out of ten machine failures slip past is completely unacceptable. To solve this, we used Extreme Gradient Boosting (XGBoost) with a cost-sensitive penalty parameter (`scale_pos_weight = 27.5`) to penalize missed breakdowns during gradient tree construction. This raised failure Recall to **85.3%**, held overall accuracy at **97.8%**, and yielded an **ROC-AUC of 0.937**, keeping missed failures down to just 1.6%. For long-term wear tracking, we implemented a Stacked LSTM network (64 and 32 units) over 20-step sliding sequences on NASA C-MAPSS turbomachinery data, reaching a **Mean Absolute Error of 30.20 operating cycles** and an **$R^2$ of 0.645**. To spot visible hardware flaws that sensors miss, MobileNet-V3 Small achieved **94.8% accuracy** classifying conveyor belt tears and hydraulic leaks. Finally, we added SHAP TreeExplainer so technicians can see exact root-cause drivers behind every alert—showing Tool Wear (36.7%) and Spindle Torque (27.0%) as the primary culprits. The full pipeline runs in 14.2 milliseconds and connects to an interactive web dashboard streaming live shop-floor telemetry every 3.5 seconds.
+Factory equipment breaks down. It happens every day on shop floors, and when it does, production stalls while repair bills mount rapidly. Most manufacturing facilities still rely on two deeply flawed habits: either running machines until parts physically snap, or discarding components on fixed calendar intervals whether they are worn out or not. The first habit causes costly collateral damage to nearby spindles. The second habit throws away functional parts that still retain over 70% of their useful life. In this project, we built GearGuard to replace that guesswork with reliable, data-backed foresight. Our system handles three distinct jobs at once: catching sudden mechanical breakdown risks from sensor streams, estimating how many operating cycles an aging machine has left before failure (Remaining Useful Life), and scanning camera feeds for visible issues like torn conveyor belts or leaking hydraulic oil lines. We evaluated our models on three benchmark datasets, led by the 10,000-record UCI AI4I 2020 CNC milling dataset. One immediate real-world challenge was severe data imbalance. Out of 10,000 machining runs, only 339 were actual breakdowns—a mere 3.39% of the data. Training a baseline Logistic Regression model gave a deceptive 96.6% accuracy on paper, but it missed 87.6% of real breakdowns, scoring a dismal 12.4% Recall. In a factory, letting nearly nine out of ten machine failures slip past defeats the whole point of monitoring. We tackled this by configuring Extreme Gradient Boosting (XGBoost) with a cost-sensitive penalty parameter (`scale_pos_weight = 27.5`) to penalize missed breakdowns heavily during tree construction. This raised failure Recall to **85.3%**, held overall accuracy at **97.8%**, and yielded an **ROC-AUC of 0.937**, keeping missed failures down to just 1.6%. For long-term wear tracking, we implemented a Stacked LSTM network (64 and 32 units) over 20-step sliding sequences on NASA C-MAPSS turbomachinery data, reaching a **Mean Absolute Error of 30.20 operating cycles** and an **$R^2$ of 0.645**. For visible hardware flaws that sensors miss, MobileNet-V3 Small achieved **94.8% accuracy** classifying conveyor belt tears and hydraulic leaks. Finally, we added SHAP TreeExplainer so technicians can see exact root-cause drivers behind every alert—showing Tool Wear (36.7%) and Spindle Torque (27.0%) as the primary culprits. The full pipeline runs in 14.2 milliseconds and connects to an interactive web dashboard streaming live shop-floor telemetry every 3.5 seconds.
 
 **Keywords:** Predictive Maintenance, Industrial AI, Cost-Sensitive XGBoost, Stacked LSTM, Remaining Useful Life, SHAP Explainability, Edge Computer Vision.
 
@@ -16,23 +16,23 @@ Machines break down. It happens every single day on factory floors, and when it 
 
 ## 1. Introduction
 
-Walk into any modern factory, and you will see automated CNC milling centers, robotic arms, and high-speed conveyor belts running continuously [1], [7]. But keeping this equipment running without interruptions is one of the hardest problems in industrial engineering. When a spindle motor overheats or a cutting tool snaps unexpectedly, the entire production schedule grinds to an immediate halt. According to research from the ARC Advisory Group and the International Society of Automation, unexpected equipment halts drain roughly 50 billion USD out of manufacturing every year, slashing overall plant throughput by 5% to 20% [7], [11].
+Walk onto any modern factory floor and you will see automated CNC milling machines, robotic cells, and high-speed conveyor belts running around the clock [1], [7]. Keeping this hardware running smoothly without sudden stoppages is one of the toughest challenges in industrial engineering. The moment a cutting tool shatters or a spindle bearing overheats, the entire line backs up. Reports from the ARC Advisory Group and the International Society of Automation estimate that unexpected machinery halts drain roughly 50 billion USD out of manufacturing every year, slashing overall plant productivity by anywhere from 5% to 20% [7], [11].
 
-Most maintenance departments currently find themselves trapped between two bad options:
-1. **Running to Failure (Reactive Maintenance):** Operators run machines until something physically breaks. This gets the absolute maximum service life out of every component, but it comes with a steep price tag: fractured cutters damage surrounding chucks, emergency technician overtime adds up, and unscheduled downtime ruins customer delivery deadlines [1], [3].
-2. **Calendar-Based Overhauls (Preventative Maintenance):** Technicians swap out parts at rigid intervals—say, every 30 days or every 500 operating hours—regardless of the part's actual physical health. This avoids some catastrophic breakdowns, but industrial studies show that over 70% of scheduled replacements discard components that still have plenty of usable life left [7], [12].
+Right now, most plant managers find themselves trapped between two bad choices:
+1. **Run-to-Failure (Reactive Maintenance):** Operators run machines until a part snaps or jams. This extracts every last minute of use out of the component, but it comes at a steep price: broken cutters damage tool holders, emergency overtime adds up, and unexpected downtime throws off customer shipment dates [1], [3].
+2. **Calendar Overhauls (Preventative Maintenance):** Technicians dismantle assemblies and replace parts on fixed calendar dates—say, every 30 days or every 500 operating hours—regardless of the part's actual physical condition. This avoids some catastrophic failures, but industry surveys reveal that over 70% of parts swapped out on schedule still have plenty of usable life left [7], [12].
 
-Predictive Maintenance (PdM) uses machine learning to bridge this gap by reading live sensor streams and forecasting failures before they turn into disasters [1], [5]. But making this work on real factory data is much harder than it looks in research tutorials. In our lab work, we ran directly into four stubborn bottlenecks:
-* **The Class Imbalance Problem:** Normal operating hours make up more than 96% of factory sensor logs, while actual breakdowns are rare events (under 4%). A standard machine learning model trained on this data quickly takes an easy shortcut: it predicts "no failure" on every row. It walks away with a stellar 96% accuracy score, yet fails to catch a single real breakdown when it matters [1], [8].
+Predictive Maintenance (PdM) offers a smarter path forward by tracking equipment condition through live sensor feeds and flagging failures before they turn into expensive breakdowns [1], [5]. But making this work on real industrial data is much harder than textbook examples suggest. In our lab experiments, we ran headfirst into four stubborn challenges:
+* **The Imbalance Trap:** Healthy operation accounts for over 96% of logged industrial hours, while catastrophic failures make up a tiny fraction (under 4%). A standard machine learning model trained on this data quickly takes an easy shortcut: it predicts "no failure" on every row. It walks away with a stellar 96% accuracy score, yet fails to catch a single real breakdown when it matters [1], [8].
 * **Wear Takes Time to Build Up:** A single row of sensor readings cannot tell you how fast a motor is heating up or how metal fatigue has accumulated across recent work cycles. Static classifiers that evaluate one timestamp in isolation completely miss the speed of wear [5], [6].
 * **Sensors Cannot See, and Cameras Cannot Feel:** Vibration and temperature sensors are great for tracking motor loads, but they cannot spot a ripped rubber conveyor belt or a cracked hydraulic seal. On the other hand, an optical camera pointed at an enclosed motor housing cannot tell you how much torque the spindle is fighting. Relying on only one sensory channel leaves dangerous blind spots [9], [10].
 * **The Operator Trust Gap:** Plant technicians and machine operators are naturally suspicious of black-box algorithms. If an AI dashboard flashes a warning telling them to shut down a line, but gives zero explanation of what is actually wrong, operators will simply dismiss the alert until smoke starts appearing [1], [8].
 
-### Contributions of this Study
-To tackle these exact real-world challenges, we built **GearGuard**. The main contributions of our work are:
-1. **A Combined Diagnostic and Prognostic Architecture:** We joined a fast, cost-weighted XGBoost classifier for instant breakdown warnings with a Stacked LSTM neural network for continuous Remaining Useful Life (RUL) forecasting, keeping total inference latency under 15 milliseconds.
-2. **Solving the 3.39% Imbalance via Cost-Sensitive Loss:** By tuning positive class penalty weights (`scale_pos_weight = 27.5`) inside the XGBoost objective, we boosted breakdown Recall from 12.4% (baseline) to **85.3%**, slashing missed failures down to 1.6%.
-3. **Shop-Floor Visual Screening on the Edge:** We trained a lightweight MobileNet-V3 Small vision model with Sobel edge filtering and dark-patch pooling to spot conveyor belt tears and hydraulic leaks at 94.8% accuracy.
+### What This Study Delivers
+We designed **GearGuard** to solve these practical factory floor issues. The core contributions of our work are:
+1. **A Unified Diagnostic and Prognostic Setup:** We combined a fast, cost-weighted XGBoost classifier for instant breakdown warnings with a Stacked LSTM neural network for continuous Remaining Useful Life (RUL) forecasting, keeping total inference latency under 15 milliseconds.
+2. **Handling 3.39% Imbalance Through Cost-Sensitive Loss:** By tuning positive class penalty weights (`scale_pos_weight = 27.5`) inside the XGBoost objective, we boosted breakdown Recall from 12.4% (baseline) to **85.3%**, slashing missed failures down to 1.6%.
+3. **Shop-Floor Visual Defect Screening:** We trained a lightweight MobileNet-V3 Small vision model with Sobel edge filtering and dark-patch pooling to spot conveyor belt tears and hydraulic leaks at 94.8% accuracy.
 4. **Actionable Root Causes in a Live Cockpit:** We embedded SHAP TreeExplainer to break down alerts into exact physical feature contributions (proving Tool Wear at 36.7% and Cutting Torque at 27.0% govern machine breakdowns) and connected the entire pipeline to an interactive web dashboard streaming live telemetry every 3.5 seconds.
 
 ### Roadmap of the Article
@@ -61,8 +61,8 @@ Predictive maintenance, deep learning prognostics, and industrial computer visio
 | **Chen, Kumar, & Patel (2025)** [11] | Hybrid diagnostic-prognostic digital twin framework | Multi-plant smart manufacturing testbed | Outlined 5-year trends: digital twins require low-latency inference, multi-task learning, and explainable interfaces for zero-defect production. | Architectural vision without fully accessible open-source code; heavy enterprise infrastructure overhead. |
 | **Ren et al. (2025)** [12] | Physics-informed neural networks (PINNs) and gradient boosting | Cyber-physical manufacturing systems | Benchmarked hybrid physics-ML models; demonstrated high reliability on small-sample prognostic domains. | Requires deep domain-specific differential equations for each mechanical component; difficult to generalize across varied shop-floor machines. |
 
-### Research Gap Analysis
-Looking closely at these published works revealed three clear gaps in current industrial AI literature:
+### Where Existing Work Falls Short
+Comparing these published papers revealed three distinct gaps in current literature:
 1. **Isolated Tasks:** Most researchers build models for one task only. A paper tackles binary classification, another focuses on RUL regression, and a third works on computer vision. On a real shop floor, technicians need all three answers in one screen: *Is the machine about to jam? How long can it run? Are the external belts and pipes damaged?*
 2. **Ignoring Imbalance in Evaluation:** Too many papers report high accuracy without emphasizing that 96% of their test rows are healthy runs. When failures are scarce, overall accuracy is a misleading metric. Practical systems must prioritize failure Recall.
 3. **The Deployment Disconnect:** As Carvalho et al. pointed out [7], over 78% of published models never leave an offline Jupyter notebook. They lack the fast inference speeds, automated maintenance work orders, and intuitive visual dashboards that factory operators need on daily shifts.
@@ -118,7 +118,7 @@ The UCI AI4I 2020 dataset reflects realistic milling operations and includes the
 7. **Failure Modes:** Beyond the primary binary failure flag, the dataset notes five physical failure causes: Tool Wear Failure (TWF), Heat Dissipation Failure (HDF), Power Failure (PWF), Overstrain Failure (OSF), and Random Failure (RNF).
 
 ### Data Preprocessing and Leakage Prevention
-To ensure strict experimental validity, we took deliberate precautions against data leakage:
+We took strict precautions during data preparation to make sure our evaluation remained completely fair:
 * **Stratified Splitting:** We partitioned the 10,000 CNC records into an 80% training set (8,000 records) and a 20% test set (2,000 records) using stratified sampling to preserve the 3.39% failure ratio in both sets.
 * **Fit-Transform Discipline:** We fitted our `StandardScaler` ($\mu = 0, \sigma = 1$) exclusively on the 8,000 training samples. The test set was transformed using the training parameters alone, preventing any test set distribution statistics from leaking into model training.
 * **Unit-Based Engine Partitioning:** For the NASA C-MAPSS dataset, we split data strictly by engine unit identifier rather than randomly shuffling rows. This ensured that consecutive temporal steps from the same degrading engine never appeared in both training and testing sets.
@@ -164,7 +164,7 @@ flowchart TD
 ```
 
 ### 5.1 Module 1: Diagnostic Failure Classifier (XGBoost)
-To detect imminent mechanical breakdowns from multi-sensor telemetry, we selected Extreme Gradient Boosting (XGBoost). XGBoost builds an ensemble of $K$ regression trees sequentially. At each boosting iteration $t$, the algorithm minimizes a regularized objective function:
+For instantaneous failure detection, Extreme Gradient Boosting (XGBoost) turned out to be our top performer. The algorithm builds a sequence of regression trees. At each boosting iteration $t$, it minimizes a regularized objective function:
 
 $$\mathcal{L}^{(t)} = \sum_{i=1}^n l\left(y_i, \hat{y}_i^{(t-1)} + f_t(\mathbf{x}_i)\right) + \Omega(f_t)$$
 
@@ -198,7 +198,7 @@ Our network stacks two LSTM layers: Layer 1 contains 64 memory units with sequen
 $$\widehat{\text{RUL}} = \mathbf{W}_r \mathbf{h}_K^{(2)} + b_r$$
 
 ### 5.3 Module 3: Multimodal Edge Computer Vision Inspection
-To catch physical hardware damage that sensors cannot measure, we integrated a lightweight MobileNet-V3 Small convolutional neural network. MobileNet-V3 replaces heavy standard convolutions with depthwise separable convolutions:
+Sensors tell only half the story on a factory floor. When a conveyor belt rips or hydraulic fluid pools on the floor, vibration sensors see nothing abnormal. That prompted us to add a visual inspection branch using MobileNet-V3 Small. MobileNet-V3 replaces heavy standard convolutions with depthwise separable convolutions:
 
 $$\text{Depthwise-Separable-Conv}(\mathbf{x}) = \text{Pointwise}_{1 \times 1}\Big(\text{Depthwise}_{3 \times 3}(\mathbf{x})\Big)$$
 
@@ -208,7 +208,7 @@ This cuts parameter counts and floating-point operations by over 80%. We also in
 2. **Hydraulic Dark-Ratio Pooling:** Identifies pooled hydraulic oil by tracking dark, low-reflectance pixel patches in normalized HSV space.
 
 ### 5.4 Proposed Innovation: Explainable AI & Prescriptive Cockpit
-To bridge the gap between machine predictions and operator trust, we integrated **SHAP TreeExplainer**. Based on cooperative game theory, Shapley values distribute the model's output fairly among all input features:
+Even the most accurate machine learning model is useless if technicians on the shop floor refuse to trust it. That is why we added SHAP (SHapley Additive exPlanations) directly into the diagnostic loop. Based on cooperative game theory, Shapley values distribute the model's output fairly among all input features:
 
 $$\phi_i(f, \mathbf{x}) = \sum_{S \subseteq F \setminus \{i\}} \frac{|S|! (|F| - |S| - 1)!}{|F|!} \left[ f(S \cup \{i\}) - f(S) \right]$$
 
@@ -225,7 +225,7 @@ If $H_m$ falls below 60%, the cockpit triggers an amber maintenance inspection. 
 
 ## 6. Experimental Setup
 
-To ensure strict scientific reproducibility, all models were evaluated under identical experimental conditions and consistent train/test partitions. Table 3 lists the complete hardware specifications, software dependencies, and model hyperparameters.
+We kept our experimental setup consistent across all runs so our benchmark comparisons remained fair. Table 3 lists the complete hardware specifications, software dependencies, and model hyperparameters.
 
 **Table 3: Hardware, Software Environment, and Hyperparameter Specifications**
 
@@ -244,7 +244,7 @@ To ensure strict scientific reproducibility, all models were evaluated under ide
 
 ## 7. Evaluation Metrics
 
-Because industrial sensor logs are heavily skewed toward normal operation, relying on overall Accuracy is dangerously misleading. We evaluated our models using five complementary classification metrics and three regression metrics:
+Raw accuracy is the worst metric you can use when working with factory failure data. If 96.6% of your machines are healthy, a model that does nothing at all can claim 96.6% accuracy. To properly measure performance, we tracked five distinct classification metrics alongside three regression scores:
 
 1. **Recall / Sensitivity (Primary Industrial Metric):** Measures the percentage of actual breakdowns caught by the model:
    $$\text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}$$
@@ -329,13 +329,13 @@ Table 5 summarizes our shop-floor optical defect detection module, which inspect
 
 ## 9. Discussion
 
-### Interpretation of Results
-Our experiments confirm our starting hypothesis: standard, unweighted machine learning models are fundamentally unsuited for industrial predictive maintenance. The failure of baseline Logistic Regression (12.4% Recall) shows the danger of relying on standard cross-entropy loss when normal logs overwhelm failure records. By combining second-order Taylor gradients with cost-sensitive Hessian weighting (`scale_pos_weight = 27.5`), XGBoost shifts focus onto the minority failure class without causing an explosion of false alarms (preserving 94.0% Specificity).
+### What the Numbers Tell Us
+Looking at the test numbers, one finding stands out above everything else: off-the-shelf, unweighted algorithms simply do not work on imbalanced industrial telemetry. The baseline Logistic Regression model fell flat on its face with a 12.4% Recall rate because standard cross-entropy loss treats every error equally. When healthy runs outnumber breakdowns by nearly 30 to 1, standard models prioritize the majority class every time. Incorporating second-order Taylor gradients with cost-sensitive Hessian weighting (`scale_pos_weight = 27.5`) flipped this dynamic. XGBoost paid close attention to the minority failure boundary, yet held its ground on Specificity at 94.0%.
 
 ### The Industrial Trade-off: Recall vs. Precision
 In consumer machine learning applications like video recommendations, high Precision is usually preferred to avoid annoying users with bad suggestions. In an industrial plant, the math is completely reversed. A False Negative (a missed breakdown that snaps a spindle, ruins workpieces, and shuts down an assembly line for five hours) costs between 15,000 and 50,000 USD. A False Positive, by contrast, costs roughly three minutes of an on-duty technician's time to glance at a cutting tool. That is why our achieved balance of **85.3% Recall** and **63.4% Precision** represents a practical, cost-effective operating point for real factory floors.
 
-### Explainability and Trust
+### Building Operator Trust Through Clear Root Causes
 A major reason machine learning projects fail to gain traction in manufacturing is operator skepticism toward opaque algorithms [1], [8]. By embedding SHAP TreeExplainer, GearGuard eliminates the mystery behind alerts. When the dashboard warns an operator about Machine 04, it does not just show a generic 88% risk score. It explains:
 $$\text{Alert Breakdown} = \text{Base Risk (3.4\%)} + 0.52 \cdot (\text{Tool Wear} = 228\text{ min}) + 0.31 \cdot (\text{Torque} = 68.2\text{ Nm})$$
 With that specific context, the technician knows right away to inspect the cutting insert, rather than wasting an hour troubleshooting electrical connections or coolant lines.
@@ -350,7 +350,7 @@ When we analyzed the 10 missed failure cases (False Negatives), we noticed that 
 
 ## 10. Conclusion and Future Work
 
-In this project, we designed, built, and tested **GearGuard**, an end-to-end multimodal predictive maintenance system for industrial machinery. By uniting cost-sensitive gradient boosted trees, deep stacked recurrent neural networks, edge computer vision, and game-theoretic explainability, the framework addresses the real-world challenges of extreme class imbalance, gradual wear accumulation, and the operator trust gap.
+In this project, we set out to build a predictive maintenance framework that actually solves the practical headaches of shop-floor monitoring: severe data imbalance, progressive component wear, optical defect detection, and the lack of model explainability. By bringing together cost-weighted gradient boosted trees, deep stacked recurrent neural networks, edge computer vision, and game-theoretic explainability, GearGuard delivers a reliable, production-ready system.
 
 ### Summary of Key Findings
 * **RQ1 Answered:** Cost-weighted XGBoost (`scale_pos_weight = 27.5`) achieved **85.3% Recall**, **97.8% overall Accuracy**, and **0.937 ROC-AUC**, cutting missed breakdowns to just 1.6% while preserving 94.0% Specificity.
